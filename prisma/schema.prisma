@@ -13,3 +13,104 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model Usuario {
+  id              Int              @id @default(autoincrement()) @map("id_users")
+  nombre       String           @map("first_name") @db.VarChar(45)
+  apellido        String           @map("last_name") @db.VarChar(45)
+  email           String           @unique @db.VarChar(80)
+  contra        String           @db.VarChar(45)
+  isOnline        Boolean          @default(false) @map("is_online")
+  isActive        Boolean          @default(true) @map("is_active")
+  createdAt       DateTime         @default(now()) @map("created_at")
+
+  // Relaciones
+  mensajes        Mensaje[]
+  chatMiembros    ChatMiembro[]
+  notificaciones  Notificacion[]
+  rolesUsuario    UsuarioRol[]
+
+  @@map("usuarios")
+}
+
+model Chat {
+  id            Int           @id @default(autoincrement()) @map("id_chat")
+  nameChat      String        @map("name_chats") @db.VarChar(45)
+  isGroup       Boolean       @default(false) @map("is_group")
+  isModerated   Boolean       @default(false) @map("is_moderated")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("update_at")
+  
+  // Relaciones
+  miembros      ChatMiembro[]
+  mensajes      Mensaje[]
+
+  @@map("chats")
+}
+
+model ChatMiembro {
+  id            Int       @id @default(autoincrement()) @map("id_chat_member")
+  userId        Int       @map("users_id_users")
+  chatId        Int       @map("chats_id_chat")
+  canWrite      Boolean   @default(true) @map("can_write")
+  joinedAt      DateTime  @default(now()) @map("joined_at")
+  isModerator   Boolean   @default(false) @map("is_moderator")
+  
+  // Relaciones
+  usuario       Usuario   @relation(fields: [userId], references: [id])
+  chats         Chat      @relation(fields: [chatId], references: [id])
+
+  @@map("chat_miembros")
+}
+
+model Mensaje {
+  id            Int       @id @default(autoincrement()) @map("id_message")
+  content       String    @db.VarChar(1000)
+  messageType   String    @default("text") @map("message_type") @db.VarChar(45)
+  sentAt        DateTime  @default(now()) @map("sent_at")
+  isArchived    Boolean   @default(false) @map("is_archived")
+  isRead        Boolean   @default(false) @map("is_read")
+  chatId        Int       @map("chats_id_chat")
+  userId        Int       @map("users_id_users")
+  
+  // Relaciones
+  chat          Chat      @relation(fields: [chatId], references: [id])
+  usuario       Usuario   @relation(fields: [userId], references: [id])
+
+  @@map("mensajes")
+}
+
+model Rol {
+  id            Int           @id @default(autoincrement()) @map("id_roles")
+  nameRole      String        @map("name_roles") @db.VarChar(45)
+  
+  // Relaciones
+  usuariosRol   UsuarioRol[]
+
+  @@map("roles")
+}
+
+model UsuarioRol {
+  userId        Int       @map("users_id_users")
+  roleId        Int       @map("roles_id_roles")
+  
+  // Relaciones
+  usuario       Usuario   @relation(fields: [userId], references: [id])
+  rol           Rol       @relation(fields: [roleId], references: [id])
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+model Notificacion {
+  id            Int       @id @default(autoincrement()) @map("id_notification")
+  message       String    @db.VarChar(45)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  isPending     Boolean   @default(true) @map("is_pending")
+  userId        Int       @map("users_id_users")
+  
+  // Relaciones
+  usuario       Usuario   @relation(fields: [userId], references: [id])
+
+  @@map("notificaciones")
+}
