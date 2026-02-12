@@ -24,7 +24,6 @@ model Usuario {
   isActive        Boolean          @default(true) @map("is_active")
   createdAt       DateTime         @default(now()) @map("created_at")
 
-  // Relaciones
   mensajes        Mensaje[]
   chatMiembros    ChatMiembro[]
   notificaciones  Notificacion[]
@@ -35,13 +34,12 @@ model Usuario {
 
 model Chat {
   id            Int           @id @default(autoincrement()) @map("id_chat")
-  nameChat      String        @map("name_chats") @db.VarChar(45)
+  nombreChat      String        @map("name_chats") @db.VarChar(45)
   isGroup       Boolean       @default(false) @map("is_group")
   isModerated   Boolean       @default(false) @map("is_moderated")
   createdAt     DateTime      @default(now()) @map("created_at")
   updatedAt     DateTime      @updatedAt @map("update_at")
   
-  // Relaciones
   miembros      ChatMiembro[]
   mensajes      Mensaje[]
 
@@ -50,14 +48,13 @@ model Chat {
 
 model ChatMiembro {
   id            Int       @id @default(autoincrement()) @map("id_chat_member")
-  userId        Int       @map("users_id_users")
+  usuarioId        Int       @map("users_id_users")
   chatId        Int       @map("chats_id_chat")
   canWrite      Boolean   @default(true) @map("can_write")
   joinedAt      DateTime  @default(now()) @map("joined_at")
   isModerator   Boolean   @default(false) @map("is_moderator")
   
-  // Relaciones
-  usuario       Usuario   @relation(fields: [userId], references: [id])
+  usuario       Usuario   @relation(fields: [usuarioId], references: [id])
   chats         Chat      @relation(fields: [chatId], references: [id])
 
   @@map("chat_miembros")
@@ -65,15 +62,14 @@ model ChatMiembro {
 
 model Mensaje {
   id            Int       @id @default(autoincrement()) @map("id_message")
-  content       String    @db.VarChar(1000)
-  messageType   String    @default("text") @map("message_type") @db.VarChar(45)
-  sentAt        DateTime  @default(now()) @map("sent_at")
-  isArchived    Boolean   @default(false) @map("is_archived")
-  isRead        Boolean   @default(false) @map("is_read")
+  info          String    @db.VarChar(1000)
+  tipMensaje    String    @default("text") @map("message_type") @db.VarChar(45)
+  enviadoEn     DateTime  @default(now()) @map("sent_at")
+  arhivado      Boolean   @default(false) @map("is_archived")
+  leido         Boolean   @default(false) @map("is_read")
   chatId        Int       @map("chats_id_chat")
   userId        Int       @map("users_id_users")
   
-  // Relaciones
   chat          Chat      @relation(fields: [chatId], references: [id])
   usuario       Usuario   @relation(fields: [userId], references: [id])
 
@@ -82,35 +78,32 @@ model Mensaje {
 
 model Rol {
   id            Int           @id @default(autoincrement()) @map("id_roles")
-  nameRole      String        @map("name_roles") @db.VarChar(45)
+  nombreRol      String        @map("name_roles") @db.VarChar(45)
   
-  // Relaciones
   usuariosRol   UsuarioRol[]
 
   @@map("roles")
 }
 
 model UsuarioRol {
-  userId        Int       @map("users_id_users")
-  roleId        Int       @map("roles_id_roles")
+  usuarioId        Int       @map("users_id_users")
+  rolId        Int       @map("roles_id_roles")
   
-  // Relaciones
-  usuario       Usuario   @relation(fields: [userId], references: [id])
-  rol           Rol       @relation(fields: [roleId], references: [id])
+  usuario       Usuario   @relation(fields: [usuarioId], references: [id])
+  rol           Rol       @relation(fields: [rolId], references: [id])
 
-  @@id([userId, roleId])
+  @@id([usuarioId, rolId])
   @@map("user_roles")
 }
 
 model Notificacion {
   id            Int       @id @default(autoincrement()) @map("id_notification")
-  message       String    @db.VarChar(45)
-  createdAt     DateTime  @default(now()) @map("created_at")
-  isPending     Boolean   @default(true) @map("is_pending")
-  userId        Int       @map("users_id_users")
+  mensaje       String    @db.VarChar(45)
+  creadoEn     DateTime  @default(now()) @map("created_at")
+  pendiente     Boolean   @default(true) @map("is_pending")
+  usuarioId        Int       @map("users_id_users")
   
-  // Relaciones
-  usuario       Usuario   @relation(fields: [userId], references: [id])
+  usuario       Usuario   @relation(fields: [usuarioId], references: [id])
 
   @@map("notificaciones")
 }
