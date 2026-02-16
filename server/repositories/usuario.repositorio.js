@@ -1,4 +1,5 @@
 const prisma = require('../prisma/client');
+//const Repositorio = require('./Repositorio');
 
 const crearUsuario = async (data) => {
     return await prisma.usuario.create({
