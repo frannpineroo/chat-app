@@ -1,15 +1,24 @@
-const UsuarioRepo = require('../repositories/usuario.repositorio');
+const usuarioRepo = require('../repositories/usuario.repositorio');
 
-const registrarUsuario = async ( data ) => {
+const registrarUsuario = async ({ nombre, apellido, email, contra } ) => {
     //validar mail
-    const existente = await UsuarioRepo.obtenerUsuarioPorEmail( data.email );
+    const existente = await usuarioRepo.obtenerUsuarioPorEmail( email );
 
     if ( existente ) {
         throw new Error('El usuario ya existe');
     }
 
-    return await UsuarioRepo.crearUsuario( data );
-}
+    // crear usuario
+    const nuevoUsuario = await usuarioRepo.crearUsuario({
+        nombre,
+        apellido,
+        email,
+        contra,
+        isOnline: true
+    });
+
+    return nuevoUsuario;
+};
 
 module.exports = {
     registrarUsuario
