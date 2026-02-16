@@ -5,16 +5,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Programa de Colas</title>
+    <title>Registrar Usuario</title>
 </head>
 
 <body>
     <h1>Chat</h1>
-    <p id="status">Conectando...</p>
+    <p id="status">Registrar Usuario</p>
+    
+    <form action="" id="formUsuario">
+        <input type="text" id="nombre" placeholder="Nombre" required>
+        <input type="text" id="apellido" placeholder="Apellido" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="contra" placeholder="Contra" required>
+    </form>
 
+    <script>
+        const form = document.getElementById('formUsuario');
 
-    <script src="socket.io/socket.io.js"></script>
-    <script src="js/socket-custom.js"></script>
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nombre = document.getElementById('nombre').value;
+            const apellido = document.getElementById('apellido').value;
+            const email = document.getElementById('email').value;
+            const contra = document.getElementById('contra').value;
+
+            const respuesta = await fetch('/usuarios', {
+                method: 'POST',
+                header: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ nombre, apellido, email, contra })
+            });
+
+            const data = await respuesta.json();
+            console.log(data);
+            alert('Usuario registrado con éxito');
+        });
+    </script>
 
 
 </body>
