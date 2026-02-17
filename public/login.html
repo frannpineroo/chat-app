@@ -16,6 +16,8 @@
         <input type="email" id="email" placeholder="Email" required>
         <input type="password" id="contra" placeholder="Contra" required>
         <button type="submit">Iniciar Sesión</button>
+        <br>
+        <button id="btnLogout">Cerrar Sesión</button>
     </form>
 
     <script>
@@ -48,6 +50,16 @@
                 alert( err.message );
             }
         });
+    </script>
+
+    <script>
+        document.getElementById('btnLogout').addEventListener('click', async () => {
+            await fetch('/auth/logout', {
+                method: 'POST'
+            });
+
+            alert('Sesión cerrada');
+        })
     </script>
 
 </body>

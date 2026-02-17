@@ -22,6 +22,18 @@ const login = async ( req, res ) => {
     }
 };
 
+const logout = ( req, res ) => {
+    
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict'
+    });
+
+    res.json({ mensaje: 'Logout exitoso' });
+};
+
 module.exports = {
-    login
+    login,
+    logout
 }
