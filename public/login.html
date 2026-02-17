@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Iniciar Sesión</title>
+</head>
+
+<body>
+    <h1>Chat</h1>
+    <p id="status">Iniciar Sesión</p>
+    
+    <form action="" id="formLogin">
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="contra" placeholder="Contra" required>
+        <button type="submit">Iniciar Sesión</button>
+    </form>
+
+    <script>
+        const formLogin = document.getElementById('formLogin');
+
+        formLogin.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const contra = document.getElementById('contra').value;
+
+            try {
+                const respuesta = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, contra })
+                });
+
+                const data = await respuesta.json();
+
+                if ( !respuesta.ok ) {
+                    throw new Error(data.message || 'Error al iniciar sesión');
+                }
+
+                alert('Inicio de sesión exitoso');
+                console.log(data);
+            } catch ( err ) {
+                alert( err.message );
+            }
+        });
+    </script>
+
+</body>
+</html>
