@@ -2,6 +2,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 const http = require('http');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 
 const usuarioRoutes = require('./routes/usuario.routes');
 
@@ -13,6 +14,7 @@ const port = process.env.PORT || 3000;
 
 //MIDDLEWARES
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.static(publicPath));
 
