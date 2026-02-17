@@ -5,6 +5,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 
 const usuarioRoutes = require('./routes/usuario.routes');
+const authRoutes = require('./routes/auth.routes');
 
 const app = express();
 let server = http.createServer(app);
@@ -22,6 +23,7 @@ app.use(express.static(publicPath));
 // RUTAS HTTP
 
 app.use('/usuarios', usuarioRoutes);
+app.use('/auth', authRoutes);
 
 
 // SOCKETS
