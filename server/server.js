@@ -1,3 +1,6 @@
+const verificarToken = require('./middlewares/auth.middleware');
+const redirigirSiAutenticado = require('./middlewares/redirect.middleware');
+
 const express = require('express');
 const socketIO = require('socket.io');
 const http = require('http');
@@ -24,6 +27,19 @@ app.use(express.static(publicPath));
 
 app.use('/usuarios', usuarioRoutes);
 app.use('/auth', authRoutes);
+
+app.get('/', redirigirSiAutenticado, (req, res) => {
+  res.sendFile(path.join(publicPath, 'index.html'));
+});
+
+app.get('/login', redirigirSiAutenticado, (req, res) => {
+  res.sendFile(path.join(publicPath, 'login.html'));
+});
+
+// Ruta protegida para el perfil del usuario
+app.get('/perfil', verificarToken, ( req, res ) => {
+    res.sendFile(path.join( publicPath, '../views/perfil.html' ));
+})
 
 
 // SOCKETS
