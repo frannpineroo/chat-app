@@ -1,9 +1,9 @@
-const prisma = require('../prisma/client');
-const Repositorio = require('./Repositorio');
+import { prisma } from '../prisma/client';
+import Repositorio from './Repositorio';
 
 class MensajeRepositorio extends Repositorio {
     constructor() {
-        super(prisma.Mensaje); 
+        super(prisma.mensaje); 
     }
 
     async crearMensaje(mensaje) {
@@ -15,10 +15,10 @@ class MensajeRepositorio extends Repositorio {
         return await this.model.findUnique({
             where: { id: crear.id },
             include: {
-                chatId: true,
-                emisorId: {
+                chat: true,
+                emisor: {
                     include: {
-                        rolId: true
+                        rol: true
                     }
                 }
             }
@@ -29,10 +29,10 @@ class MensajeRepositorio extends Repositorio {
         return await this.model.findUnique({
             where: { id },
             include: {
-                chatId: true,
-                emisorId: {
+                chat: true,
+                emisor: {
                     include: {
-                        rolId: true
+                        rol: true
                     }
                 }
             }
@@ -46,16 +46,9 @@ class MensajeRepositorio extends Repositorio {
                 fechaEnvio: 'asc'
             },
             include: {
-                chatId: true,
-                emisorId: true
+                chat: true,
+                emisor: true
             }
-        });
-    }
-
-    async actualizar(id, data) {
-        return await this.model.update({
-            where: { id },
-            data
         });
     }
 
@@ -65,7 +58,7 @@ class MensajeRepositorio extends Repositorio {
                 where: { id }
             });
 
-            if (!message) return false;
+            if (!mensaje) return false;
 
             await this.model.delete({
                 where: { id }
@@ -79,4 +72,4 @@ class MensajeRepositorio extends Repositorio {
     }
 }
 
-module.exports = MensajeRepositorio;
+export default MensajeRepositorio;

@@ -2,7 +2,7 @@ const EntityBase = require('./EntityBase');
 const TipoMensaje = require("../shared/Enums/TipoMensaje");
 
 class Mensaje extends EntityBase {
-  constructor({ id, chatId, emisorId, contenido, TipoMensaje = 1, archivo, fechaEnvio = new Date(),
+  constructor({ id, chatId, emisorId, contenido, TipoMensaje = "text", archivo, fechaEnvio = new Date(),
                 archivado = false, leido = false}) 
     {
     

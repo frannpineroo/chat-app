@@ -3,6 +3,12 @@ class Repositorio {
         this.model = model;
     }
 
+    async existe(id) {
+    return await this.model.findUnique({
+      where: { id }
+    });
+    }
+
     async insert(entidad) {
         const crear = await this.model.create({
             data: entidad
@@ -33,6 +39,17 @@ class Repositorio {
             return false;
         }
     }
+
+    async delete(id) {
+      try {
+        await this.model.delete({
+          where: { id }
+        });
+        return true;
+      } catch (error) {
+        return false;
+     }
+    }
 }
 
-module.exports = Repositorio;
+export default Repositorio;

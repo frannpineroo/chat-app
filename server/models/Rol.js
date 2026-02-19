@@ -1,4 +1,4 @@
-const EntityBase = require('./EntityBase');
+import EntityBase from './EntityBase';
 
 class Rol extends EntityBase {
   constructor({id,nombre}) 
@@ -8,4 +8,4 @@ class Rol extends EntityBase {
   }
 }
 
-module.exports = Rol;
+export default Rol;

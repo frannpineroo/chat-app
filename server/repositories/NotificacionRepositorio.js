@@ -1,19 +1,19 @@
-const prisma = require('../prisma/client');
-const Repositorio = require('./Repositorio');
+import prisma from '../prisma/client.js';
+import Repositorio from './Repositorio.js';
 
 class NotificacionRepositorio extends Repositorio {
     constructor() {
-        super(prisma.Notificacion); 
+        super(prisma.notificacion); 
     }
 
     async crearNotificacion(dto) {
-        return await this.model.create({
-            data: {
+        return await this.create({
+            //data: {
                 usuarioId: dto.usuarioId,
                 mensaje: dto.mensaje,
                 fechaCreacion: new Date(),
                 pendiente: true
-            }
+            //}
         });
     }
 
@@ -39,17 +39,13 @@ class NotificacionRepositorio extends Repositorio {
 
     async marcarLeido(notificacionId) {
         try {
-            const notificacion = await this.model.findUnique({
-                where: { id: notificacionId }
-            });
+            const existe = await this.selectById(notificacionId);
+            if (!existe) return false;
 
-            if (!notificacion) return false;
-
-            await this.model.update({
+            await this.update({
                 where: { id: notificacionId },
                 data: { pendiente: false }
             });
-
             return true;
 
         } catch (error) {
@@ -58,4 +54,4 @@ class NotificacionRepositorio extends Repositorio {
     }
 }
 
-module.exports = NotificacionRepositorio;
+export default NotificacionRepositorio;

@@ -1,73 +1,77 @@
-const prisma = require('../prisma/client');
-const Repositorio = require('./Repositorio');
+import { prisma } from '../prisma/client';
+import Repositorio from './Repositorio';
 
 class MiembroChatRepositorio extends Repositorio {
     constructor() {
         super(prisma.MiembroChat); 
     }
 
-    async traerMiembros() {
-        return await this.model.findMany();
-    }
+    //async traerMiembros() {
+    //    return await this.model.findMany();
+    //}
 
     async buscarPorChatId(chatId) {
         return await this.model.findMany({
-            where: {
-                chatId: chatId
-            }
+            where: {chatId: chatId}
+        });
+    }
+    
+    async buscarPorUsuarioId(usuarioId) {
+        return await this.model.findMany({
+            where: { usuarioId: usuarioId }
         });
     }
 
-    async crearMiembro(entidad) {
-        try {
-            const crear = await this.model.create({
-                data: entidad
-            });
+    //async crearMiembro(entidad) {
+    //    try {
+    //        const crear = await this.model.create({
+    //            data: entidad
+    //        });
 
-            return crear.id;
+    //        return crear.id;
 
-        } catch (error) {
-            throw error;
-        }
-    }
+    //    } catch (error) {
+    //        throw error;
+    //    }
+    //}
 
-    async actualizarMiembro(id, entidad) {
-        if (id !== entidad.id) {
-            return false;
-        }
+    //async actualizarMiembro(id, entidad) {
+      //  if (id !== entidad.id) {
+        //    return false;
+        //}
 
-        const existe = await this.model.findUnique({
-            where: { id }
-        });
+        //const existe = await this.model.findUnique({
+          //  where: { id }
+        //});
 
-        if (!existe) return false;
+        //if (!existe) return false;
 
-        try {
-            await this.model.update({
-                where: { id },
-                data: entidad
-            });
+        //try {
+        //    await this.model.update({
+        //        where: { id },
+        //        data: entidad
+        //    });
 
-            return true;
+        //    return true;
 
-        } catch (error) {
-            throw error;
-        }
-    }
+        //} catch (error) {
+        //    throw error;
+       // }
+    //}
 
-    async borrar(id) {
-        const entidad = await this.model.findUnique({
-            where: { id }
-        });
+    //async borrar(id) {
+      //  const entidad = await this.model.findUnique({
+        //    where: { id }
+        //});
 
-        if (!entidad) return false;
+        //if (!entidad) return false;
 
-        await this.model.delete({
-            where: { id }
-        });
+        //await this.model.delete({
+        //    where: { id }
+        //});
 
-        return true;
-    }
+        //return true;
+    //}
 }
 
-module.exports = MiembroChatRepositorio;
+export default MiembroChatRepositorio;

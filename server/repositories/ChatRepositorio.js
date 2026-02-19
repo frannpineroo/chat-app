@@ -1,27 +1,29 @@
-const prisma = require('../prisma/client');
-const Repositorio = require('./Repositorio');
+import { PrismaClient, $transaction } from '../prisma/client';
+import Repositorio from './Repositorio.js';
+
+const prisma = new PrismaClient();
 
 class ChatRepositorio extends Repositorio {
     constructor() {
-        this.chat = prisma.Chat;
-        this.miembroChat = prisma.MiembroChat;
-        this.mensaje = prisma.Mensaje;
+        super(prisma.chat);
+        this.miembroChat = prisma.miembroChat;
+        this.mensaje = prisma.mensaje;
     }
 
     async buscarPorUsuario(usuarioId) {
         return await this.miembroChat.findMany({
             where: { usuarioId },
             include: {
-                Chat: true
+                chat: true
             }
         });
     }
 
     async buscarChatPorId(id) {
-        return await this.chat.findUnique({
+        return await this.model.findUnique({
             where: { id },
             include: {
-                Mensaje: {
+                mensaje: {
                     orderBy: { fechaEnvio: 'desc' },
                     take: 1
                 }
@@ -30,9 +32,9 @@ class ChatRepositorio extends Repositorio {
     }
 
     async traerTodos() {
-        return await this.chat.findMany({
+        return await this.model.findMany({
             include: {
-                Mensaje: {
+                mensaje: {
                     orderBy: { fechaEnvio: 'desc' },
                     take: 1
                 }
@@ -41,7 +43,7 @@ class ChatRepositorio extends Repositorio {
     }
 
     async crearChat(data, usuariosId) {
-        return await prisma.$transaction(async (tx) => {
+        return await $transaction(async (tx) => {
             const chat = await tx.chat.create({
                 data: {
                     nombre: data.nombre,
@@ -58,7 +60,7 @@ class ChatRepositorio extends Repositorio {
             }));
 
             await tx.miembroChat.createMany({
-                data: miembroChat
+                data: miembros
             });
 
             return chat;
@@ -67,7 +69,7 @@ class ChatRepositorio extends Repositorio {
 
     async actualizarChat(id, data) {
         try {
-            await this.chat.update({
+            await this.model.update({
                 where: { id },
                 data: {
                     ...data,
@@ -83,36 +85,36 @@ class ChatRepositorio extends Repositorio {
 
     async borrarChat(id) {
         try {
-            await this.chat.delete({
+            await this.model.delete({
                 where: { id }
             });
             return true;
 
-        } catch {
+        } catch (error) {
             return false;
         }
     }
 
-    async buscarPorNombre(name) {
-        return await this.chat.findFirst({
-            where: { name }
+    async buscarPorNombre(nombre) {
+        return await this.model.findFirst({
+            where: { nombre }
         });
     }
 
     async buscarPorGrupo(esGrupo) {
-        return await this.chat.findMany({
+        return await this.model.findMany({
             where: { esGrupo }
         });
     }
 
     async buscarPorModeracion(esModerado) {
-        return await this.chat.findMany({
+        return await this.model.findMany({
             where: { esModerado }
         });
     }
 
     async buscarPorFechaCreacion(date) {
-        return await this.chat.findMany({
+        return await this.model.findMany({
             where: {
                 fechaCreacion: {
                     gte: new Date(date.setHours(0,0,0,0)),
@@ -123,7 +125,7 @@ class ChatRepositorio extends Repositorio {
     }
 
     async buscarPorFechaActualizacion(date) {
-        return await this.chat.findMany({
+        return await this.model.findMany({
             where: {
                 fechaActualizacion: {
                     gte: new Date(date.setHours(0,0,0,0)),
@@ -134,4 +136,4 @@ class ChatRepositorio extends Repositorio {
     }
 }
 
-module.exports = ChatRepositorio;
+export default ChatRepositorio;
