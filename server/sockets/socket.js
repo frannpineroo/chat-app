@@ -1,29 +1,51 @@
 const { io } = require('../server');
+const jwt = require('jsonwebtoken');
 const usuarioServicio = require('../services/usuario.servicio');
 
-io.on('connection', (client) => {
+// Middleware para validar el token JWT
+io.use(( socket, next ) => {
+    
+    const cookie = socket.handshake.headers.cookie;
 
-    console.log('Usuario conectado');
+    if ( !cookie ) {
+        return next( new Error('No autenticado'));
+    }
 
-    // Crear Usuario
-    client.on('crear-usuario', async (data, callback) => {
-        try {
-            const usuario = await usuarioServicio.registrarUsuario( data );
+    const token = cookie
+        .split('; ')
+        .find( c => c.startsWith('token='))
+        ?.split('=')[1];
 
-            callback({
-                ok: true,
-                usuario
-            });
-        } catch ( error ) {
-            callback({
-                ok: false,
-                mensaje: error.message
-            })
-        }
+    if ( !token ) {
+        return next( new Error('Token no encontrado'));
+    }
+
+    try {
+        const decoded = jwt.verify( token, process.env.JWT_SECRET );
+
+        socket.usuario = decoded; // guarda la info del usuario en el socket
+        next();
+    } catch ( error ) {
+        return next( new Error('Token inválido'));
+    }
+});
+
+// Conexion a Socket.IO
+io.on('connection', (socket) => {
+
+    console.log('Usuario conectado: ', socket.usuario);
+
+    socket.on('mensaje', ( texto ) => {
+
+        io.emit('mensaje', {
+            nombre: socket.usuario.nombre,
+            mensaje: texto
+        });
+
     });
 
-    client.on('disconnect', () => {
-        console.log('Usuario desconectado');
+    socket.on('disconnect', () => {
+        console.log('Usuario desconectado', socket.usuario);
     });
 
 });

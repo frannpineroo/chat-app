@@ -3,12 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil de Usuario</title>
+    <title>Chat Global</title>
 </head>
 <body>
-    <h1>Perfil de Usuario</h1>
-    <p id="userInfo">Cargando información del usuario...</p>
+    <h2>Chat Global</h2>
+    <ul id="mensajes"></ul>
+
+    <input id="inputMensaje" placeholder="Escribi un mensaje..." />
+    <button id="btnEnviar">Enviar</button>
 
     <a href="/">Volver</a>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        const socket = io();
+
+        socket.on('connect', () => {
+            console.log('Conectado al servidor')
+        });
+
+        socket.on('disconnect', ( data ) => {
+            console.log('Desconectado del servidor')
+        });
+    </script>
+
+    <script>
+        const lista = document.getElementById('mensajes');
+        const input = document.getElementById('inputMensaje');
+        const boton = document.getElementById('btnEnviar');
+
+        boton.addEventListener('click', () => {
+            const mensaje = input.value;
+
+            if ( mensaje.trim() !== '') {
+                socket.emit('mensaje', mensaje);
+                input.value = '';
+            }
+        });
+
+        socket.on('mensaje', ( data ) => {
+            const li = document.createElement('li');
+            li.textContent = `${data.nombre}: ${data.mensaje}`;
+            lista.appendChild(li);
+        });
+    </script>
+
 </body>
 </html>

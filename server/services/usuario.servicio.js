@@ -46,6 +46,7 @@ const loginUsuario = async ( email, contra ) => {
         {
             id: usuario.id,
             email: usuario.email,
+            nombre: usuario.nombre
         },
         process.env.JWT_SECRET,
         { expiresIn: process.env.JWT_EXPIRES_IN }
