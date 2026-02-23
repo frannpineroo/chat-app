@@ -1,6 +1,8 @@
 const { io } = require('../server');
 const jwt = require('jsonwebtoken');
+
 const usuarioServicio = require('../services/usuario.servicio');
+const mensajeServicio = require('../services/mensaje.servicio');
 
 // Middleware para validar el token JWT
 io.use(( socket, next ) => {
@@ -35,11 +37,19 @@ io.on('connection', (socket) => {
 
     console.log('Usuario conectado: ', socket.usuario);
 
-    socket.on('mensaje', ( texto ) => {
+    socket.on('mensaje', async ( data ) => {
+        const { info, chatId } = data;
+
+        // Guarda el mensaje en la base de datos
+        const mensajeGuardado = await mensajeServicio.guardarMensaje(
+            info,
+            socket.usuario.id,
+            chatId
+        );
 
         io.emit('mensaje', {
+            info: mensajeGuardado.info,
             nombre: socket.usuario.nombre,
-            mensaje: texto
         });
 
     });

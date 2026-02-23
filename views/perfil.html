@@ -37,14 +37,14 @@
             const mensaje = input.value;
 
             if ( mensaje.trim() !== '') {
-                socket.emit('mensaje', mensaje);
+                socket.emit('mensaje', { info: mensaje, chatId: 1 });
                 input.value = '';
             }
         });
 
-        socket.on('mensaje', ( data ) => {
+        socket.on('mensaje', (data) => {
             const li = document.createElement('li');
-            li.textContent = `${data.nombre}: ${data.mensaje}`;
+            li.textContent = `${data.nombre}: ${data.info}`;
             lista.appendChild(li);
         });
     </script>
