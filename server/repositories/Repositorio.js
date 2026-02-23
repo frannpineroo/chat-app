@@ -52,4 +52,4 @@ class Repositorio {
     }
 }
 
-export default Repositorio;
+module.exports = Repositorio;

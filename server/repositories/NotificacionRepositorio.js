@@ -1,5 +1,7 @@
-import prisma from '../prisma/client.js';
-import Repositorio from './Repositorio.js';
+const {PrismaClient} = require ('@prisma/client');
+const Repositorio = require ('./Repositorio.js');
+
+const prisma = new PrismaClient();
 
 class NotificacionRepositorio extends Repositorio {
     constructor() {
@@ -54,4 +56,4 @@ class NotificacionRepositorio extends Repositorio {
     }
 }
 
-export default NotificacionRepositorio;
+module.exports = NotificacionRepositorio;

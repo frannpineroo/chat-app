@@ -1,5 +1,7 @@
-import { prisma } from '../prisma/client';
-import Repositorio from './Repositorio';
+const {PrismaClient} = require ('@prisma/client');
+const Repositorio = require ('./Repositorio');
+
+const prisma = new PrismaClient();
 
 class MensajeRepositorio extends Repositorio {
     constructor() {
@@ -72,4 +74,4 @@ class MensajeRepositorio extends Repositorio {
     }
 }
 
-export default MensajeRepositorio;
+module.exports = MensajeRepositorio;

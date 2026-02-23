@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Principal</title>
+
+</head>
+
+<body>
+
+<div class="chat-page">
+    <div class="top-bar">
+        <h3>Mensajes</h3>
+        <button class="notif-btn" onclick="toggleNotifications()">
+            🔔
+            <span class="badge" id="notifCount">3</span>
+        </button>
+    </div>
+
+    <div class="chat-container">
+        <div class="sidebar" ></div>
+        <div class="message-section" id="messageSection"></div>
+    </div>
+
+    <div id="notificaciones" class="seccion-notificaciones hide"></div>
+</div>
+
+<script>
+
+let chatIdSeleccionado = 1;
+let showNotifications = false;
+
+const chats = [
+    { id: 1, nombre: "Chat 1" },
+    { id: 2, nombre: "Chat 2" },
+    { id: 3, nombre: "Chat 3" }
+];
+
+const notifications = [
+    { chatId: 2, title: "Nuevo mensaje", message: "Te escribieron en Chat 2", time: "10:30", read: false },
+    { chatId: 3, title: "Nuevo mensaje", message: "Mensaje en Chat 3", time: "11:15", read: false },
+    { chatId: 1, title: "Recordatorio", message: "Revisa Chat 1", time: "12:00", read: true }
+];
+
+function renderChats() {
+    const chatList = document.getElementById("chatList");
+    chatList.innerHTML = "";
+
+    chats.forEach(chat => {
+        const div = document.createElement("div");
+        div.className = "chat-item";
+        div.textContent = chat.nombre;
+        div.onclick = () => cambiarChat(chat.id);
+        chatList.appendChild(div);
+    });
+}
+
+function renderMensajes() {
+    const messageSection = document.getElementById("messageSection");
+    messageSection.innerHTML = `<h4>Chat seleccionado: ${chatIdSeleccionado}</h4>`;
+}
+
+function renderNotificaciones() {
+    const contenedor = document.getElementById("notificaciones");
+    contenedor.innerHTML = "";
+
+    notifications.forEach(n => {
+        const div = document.createElement("div");
+        div.style.padding = "8px";
+        div.style.marginBottom = "5px";
+        div.style.background = n.read ? "#e0e0e0" : "#ffffff";
+        div.style.cursor = "pointer";
+
+        div.innerHTML = `
+            <strong>${n.title}</strong><br>
+            ${n.message}<br>
+            <small>${n.time}</small>
+        `;
+
+        div.onclick = () => abrirChatDesdeNotificacion(n.chatId);
+        contenedor.appendChild(div);
+    });
+}
+
+// =======================
+// FUNCIONES (equivalente a métodos Blazor)
+// =======================
+
+function cambiarChat(chatId) {
+    chatIdSeleccionado = chatId;
+    renderMensajes();
+}
+
+function toggleNotifications() {
+    showNotifications = !showNotifications;
+    actualizarVisibilidadNotificaciones();
+}
+
+function abrirChatDesdeNotificacion(chatId) {
+    chatIdSeleccionado = chatId;
+    showNotifications = false;
+    renderMensajes();
+    actualizarVisibilidadNotificaciones();
+}
+
+function cerrarNotificaciones() {
+    showNotifications = false;
+    actualizarVisibilidadNotificaciones();
+}
+
+function actualizarVisibilidadNotificaciones() {
+    const panel = document.getElementById("notificaciones");
+    panel.className = "seccion-notificaciones " + (showNotifications ? "show" : "hide");
+}
+
+// =======================
+// INIT
+// =======================
+
+renderChats();
+renderMensajes();
+renderNotificaciones();
+
+</script>
+
+</body>
+
+<style>
+.chat-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+}
+.notif-btn {
+    position: relative;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+.badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #ff4b5c;
+    color: white;
+    font-size: 10px;
+    padding: 2px 5px;
+    border-radius: 50%;
+}
+.chat-container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    background-color: #f8f9fb;
+    flex:1;
+    position: relative;
+}
+.seccion-notificaciones {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    width: 300px;
+    max-height: 80vh;
+    overflow-y: auto;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    z-index: 1000;
+    min-height: 50px;
+}
+.hide { display: none; }
+.show { display: block; }
+
+.chat-list {
+    width: 30%;
+    background: white;
+    border-right: 1px solid #ddd;
+    padding: 10px;
+}
+
+.chat-item {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.chat-item:hover {
+    background: #f0f0f0;
+}
+
+.message-section {
+    flex: 1;
+    padding: 20px;
+}
+</style>
+
+</html>

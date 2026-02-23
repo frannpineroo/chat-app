@@ -1,6 +1,6 @@
 
-import { PrismaClient } from "@prisma/client";
-import Repositorio from "./Repositorio.js";
+const {PrismaClient} = require ('@prisma/client');
+const Repositorio = require ("./Repositorio.js");
 const prisma = new PrismaClient();
 
 class RolRepositorio extends Repositorio {
@@ -15,4 +15,4 @@ class RolRepositorio extends Repositorio {
   }
 }
 
-export default RolRepositorio;
+module.exports = RolRepositorio;
