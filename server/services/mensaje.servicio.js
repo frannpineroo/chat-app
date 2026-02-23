@@ -12,7 +12,12 @@ const listarMensajes = async () => {
     return await mensajeRepo.obtenerMensajes();
 };
 
+const editarMensaje = async ( mensajeId, nuevoInfo, userId ) => {
+    return await mensajeRepo.editarMensaje( mensajeId, nuevoInfo, userId );
+}
+
 module.exports = {
     guardarMensaje,
-    listarMensajes
+    listarMensajes,
+    editarMensaje
 }

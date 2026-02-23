@@ -52,6 +52,18 @@ io.on('connection', (socket) => {
             nombre: socket.usuario.nombre,
         });
 
+        // Actualiza el mensaje en la base de datos
+        socket.on('editarMensaje', async ( data ) => {
+            const { mensajeId, nuevoInfo } = data;
+
+            const mensajeActualizado = await mensajeServicio.editarMensaje(
+                mensajeId,
+                nuevoInfo,
+                socket.usuario.id
+            );
+
+            io.emit('mensajeEditado', { mensajeActualizado });
+        });
     });
 
     socket.on('disconnect', () => {

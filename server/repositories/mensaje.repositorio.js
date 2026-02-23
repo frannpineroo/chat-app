@@ -17,7 +17,18 @@ const obtenerMensajes = async () => {
     });
 };
 
+const editarMensaje = async ( mensajeId, nuevoInfo, userId ) => {
+    return await prisma.mensaje.update({
+        where: {
+            id: mensajeId,
+            userId: userId // seguridad: solo el autor del mensaje puede editarlo
+        }, 
+        data: { info: nuevoInfo }
+    });
+};
+
 module.exports = {
     crearMensaje,
-    obtenerMensajes
+    obtenerMensajes,
+    editarMensaje
 }
