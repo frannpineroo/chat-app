@@ -15,39 +15,6 @@
     <a href="/">Volver</a>
 
     <script src="/socket.io/socket.io.js"></script>
-
-    <script>
-        const socket = io();
-
-        socket.on('connect', () => {
-            console.log('Conectado al servidor')
-        });
-
-        socket.on('disconnect', ( data ) => {
-            console.log('Desconectado del servidor')
-        });
-    </script>
-
-    <script>
-        const lista = document.getElementById('mensajes');
-        const input = document.getElementById('inputMensaje');
-        const boton = document.getElementById('btnEnviar');
-
-        boton.addEventListener('click', () => {
-            const mensaje = input.value;
-
-            if ( mensaje.trim() !== '') {
-                socket.emit('mensaje', { info: mensaje, chatId: 1 });
-                input.value = '';
-            }
-        });
-
-        socket.on('mensaje', (data) => {
-            const li = document.createElement('li');
-            li.textContent = `${data.nombre}: ${data.info}`;
-            lista.appendChild(li);
-        });
-    </script>
-
+    <script src="/js/perfil.js"></script>
 </body>
 </html>

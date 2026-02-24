@@ -36,6 +36,7 @@ io.use(( socket, next ) => {
 io.on('connection', (socket) => {
 
     console.log('Usuario conectado: ', socket.usuario);
+    socket.emit('usuario', { id: socket.usuario.id })
 
     socket.on('mensaje', async ( data ) => {
         const { info, chatId } = data;
@@ -48,7 +49,9 @@ io.on('connection', (socket) => {
         );
 
         io.emit('mensaje', {
+            id: mensajeGuardado.id,
             info: mensajeGuardado.info,
+            userId: mensajeGuardado.userId,
             nombre: socket.usuario.nombre,
         });
 
