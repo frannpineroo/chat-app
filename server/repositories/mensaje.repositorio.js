@@ -31,8 +31,21 @@ const editarMensaje = async ( mensajeId, nuevoInfo, userId ) => {
     });
 };
 
+const borrarMensaje = async ( mensajeId, userId ) => {
+    return await prisma.mensaje.update({
+        where: {
+            id: mensajeId,
+            userId: userId // seguridad: solo el autor del mensaje puede eliminarlo
+        },
+        data: {
+            arhivado: true
+        }
+    })
+} 
+
 module.exports = {
     crearMensaje,
     obtenerMensajes,
-    editarMensaje
+    editarMensaje,
+    borrarMensaje
 }

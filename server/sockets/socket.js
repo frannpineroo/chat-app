@@ -76,6 +76,18 @@ io.on('connection', (socket) => {
                 }
             });
         });
+
+        // Archiva el mensaje en la base de datos
+        socket.on('borrarMensaje', async ( data ) => {
+            const { mensajeId } = data;
+
+            await mensajeServicio.borrarMensaje(
+                mensajeId,
+                socket.usuario.id
+            );
+
+            io.emit('mensajeBorrado', { mensajeId });
+        });
     });
 
     socket.on('disconnect', () => {

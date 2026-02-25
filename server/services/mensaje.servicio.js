@@ -16,8 +16,13 @@ const editarMensaje = async ( mensajeId, nuevoInfo, userId ) => {
     return await mensajeRepo.editarMensaje( mensajeId, nuevoInfo, userId );
 }
 
+const borrarMensaje = async ( mensajeId, userId ) => {
+    return await mensajeRepo.borrarMensaje( mensajeId, userId );
+}
+
 module.exports = {
     guardarMensaje,
     listarMensajes,
-    editarMensaje
+    editarMensaje,
+    borrarMensaje
 }

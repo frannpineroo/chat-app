@@ -31,8 +31,6 @@ boton.addEventListener('click', () => {
 
 // Recibir mensaje nuevo
 socket.on('mensaje', ( data ) => {
-    console.log('data.userId:', data.userId, typeof data.userId);
-    console.log('miId:', miId, typeof miId);
     agregarMensajeAlDOM( data );
 });
 
@@ -60,8 +58,10 @@ function agregarMensajeAlDOM( data ) {
                 ${data.nombre}: ${data.info}
                 ${data.editado ? '<span class="editado">(editado)</span>' : ''}
             </span>
-            ${Number(data.userId) === Number(miId)
-                ? `<button onclick="editarMensaje(${data.id})">✏️</button>`
+            ${Number(data.userId) === Number(miId) ? `
+                <button onclick="editarMensaje(${data.id})">✏️</button>
+                <button onclick="borrarMensaje(${data.id})">🗑️</button>
+                `
                 : ''}
         `;
         return;
@@ -75,8 +75,10 @@ function agregarMensajeAlDOM( data ) {
             ${ data.nombre }: ${ data.info }
             ${ data.editado ? '<span class="editado">(editado)</span>' : '' }
         </span>
-        ${Number(data.userId) === Number(miId)
-            ? `<button onclick="editarMensaje(${data.id})">✏️</button>`
+        ${Number(data.userId) === Number(miId) ? `
+            <button onclick="editarMensaje(${data.id})">✏️</button>
+            <button onclick="borrarMensaje(${data.id})">🗑️</button>
+            `
             : ''}
     `;
 
@@ -90,3 +92,16 @@ function editarMensaje( mensajeId ) {
         socket.emit('editarMensaje', { mensajeId, nuevoInfo });
     }
 }
+
+function borrarMensaje( mensajeId ) {
+    if ( confirm('¿Estás seguro de que quieres borrar este mensaje?') ) {
+        socket.emit('borrarMensaje', { mensajeId });
+    }
+}
+
+socket.on('mensajeBorrado', ( data ) => {
+    const li = document.getElementById(`mensaje-${ data.mensajeId }`);
+    if ( li ) {
+        li.remove();
+    }
+})
