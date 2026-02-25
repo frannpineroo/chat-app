@@ -6,6 +6,8 @@ const lista = document.getElementById('mensajes');
 const input = document.getElementById('inputMensaje');
 const boton = document.getElementById('btnEnviar');
 
+let mensajesPendientes = null;
+
 // Eventos de conexion
 socket.on('connect', () => {
     console.log('Conectado al servidor');
@@ -15,15 +17,26 @@ socket.on('disconnect', () => {
     console.log('Desconectado del servidor');
 });
 
-socket.on('usuario', ( data ) => {
+socket.on('usuario', (data) => {
     miId = data.id;
+
+    if (mensajesPendientes) {
+        lista.innerHTML = '';
+        mensajesPendientes.forEach(mensaje => agregarMensajeAlDOM(mensaje));
+        mensajesPendientes = null;
+    }
 });
 
 // Carga inicial de mensajes
-socket.on('cargarMensajes', ( mensajes ) => {
-    lista.innerHTML = ''; // Limpiar mensajes anteriores
-    mensajes.forEach( mensaje => agregarMensajeAlDOM( mensaje ) );
-})
+socket.on('cargarMensajes', (mensajes) => {
+    if (!miId) {
+        // Si el usuario todavía no llegó, guardar los mensajes para después
+        mensajesPendientes = mensajes;
+        return;
+    }
+    lista.innerHTML = '';
+    mensajes.forEach(mensaje => agregarMensajeAlDOM(mensaje));
+});
 
 // Enviar mensaje
 boton.addEventListener('click', () => {
@@ -56,39 +69,37 @@ socket.on('mensajeEditado', ( data ) => {
 
 // Agregar Mensaje al DOM
 function agregarMensajeAlDOM( data ) {
-    let li = document.getElementById(`mensaje-${ data.id }`);
+    const esMio = Number(data.userId) === Number(miId);
+
+    let div = document.getElementById(`mensaje-${ data.id }`);
     
-    if (li) {
-        li.innerHTML = `
-            <span class="texto">
-                ${data.nombre}: ${data.info}
-                ${data.editado ? '<span class="editado">(editado)</span>' : ''}
-            </span>
-            ${Number(data.userId) === Number(miId) ? `
-                <button onclick="editarMensaje(${data.id})">✏️</button>
-                <button onclick="borrarMensaje(${data.id})">🗑️</button>
-                `
-                : ''}
-        `;
+    const contenido = `
+        <div class="chat-header">
+            ${data.nombre}
+        </div>
+        <div class="chat-bubble ${esMio ? 'chat-bubble-primary' : ''}">
+            ${data.info}
+            ${data.editado ? '<span class="text-xs opacity-60">(editado)</span>' : ''}
+        </div>
+        ${esMio ? `
+            <div class="chat-footer flex gap-2 mt-1">
+                <button onclick="editarMensaje(${data.id})" class="btn btn-xs">✏️</button>
+                <button onclick="borrarMensaje(${data.id})" class="btn btn-xs btn-error">🗑️</button>
+            </div>
+        ` : ''}
+    `;
+
+    if (div) {
+        div.innerHTML = contenido;
         return;
     }
 
-    li = document.createElement('li');
-    li.id = `mensaje-${ data.id }`;
+    div = document.createElement('div');
+    div.id = `mensaje-${data.id}`;
+    div.className = `chat ${esMio ? 'chat-end' : 'chat-start'}`;
+    div.innerHTML = contenido;
 
-    li.innerHTML = `
-        <span class="texto">
-            ${ data.nombre }: ${ data.info }
-            ${ data.editado ? '<span class="editado">(editado)</span>' : '' }
-        </span>
-        ${Number(data.userId) === Number(miId) ? `
-            <button onclick="editarMensaje(${data.id})">✏️</button>
-            <button onclick="borrarMensaje(${data.id})">🗑️</button>
-            `
-            : ''}
-    `;
-
-    lista.appendChild(li);
+    lista.appendChild(div);
 }
 
 // Editar mensaje 

@@ -35,7 +35,6 @@ io.use(( socket, next ) => {
 // Conexion a Socket.IO
 io.on('connection', async (socket) => {
 
-    console.log('Usuario conectado: ', socket.usuario);
     socket.emit('usuario', { id: socket.usuario.id })
 
     // Cargar mensajes existentes
@@ -65,40 +64,40 @@ io.on('connection', async (socket) => {
             userId: mensajeGuardado.userId,
             nombre: socket.usuario.nombre,
         });
+    });
 
-        // Actualiza el mensaje en la base de datos
-        socket.on('editarMensaje', async ( data ) => {
-            const { mensajeId, nuevoInfo } = data;
+    // Actualiza el mensaje en la base de datos
+    socket.on('editarMensaje', async ( data ) => {
+        const { mensajeId, nuevoInfo } = data;
 
-            const mensajeActualizado = await mensajeServicio.editarMensaje(
-                mensajeId,
-                nuevoInfo,
-                socket.usuario.id,
-                socket.usuario.nombre
-            );
+        const mensajeActualizado = await mensajeServicio.editarMensaje(
+            mensajeId,
+            nuevoInfo,
+            socket.usuario.id,
+            socket.usuario.nombre
+        );
 
-            io.emit('mensajeEditado', { 
-                mensajeActualizado: {
-                    id: mensajeActualizado.id,
-                    info: mensajeActualizado.info,
-                    editado: mensajeActualizado.editado,
-                    userId: mensajeActualizado.userId,
-                    nombre: mensajeActualizado.usuario.nombre
-                }
-            });
+        io.emit('mensajeEditado', { 
+            mensajeActualizado: {
+                id: mensajeActualizado.id,
+                info: mensajeActualizado.info,
+                editado: mensajeActualizado.editado,
+                userId: mensajeActualizado.userId,
+                nombre: mensajeActualizado.usuario.nombre
+            }
         });
+    });
 
-        // Archiva el mensaje en la base de datos
-        socket.on('borrarMensaje', async ( data ) => {
-            const { mensajeId } = data;
+    // Archiva el mensaje en la base de datos
+    socket.on('borrarMensaje', async ( data ) => {
+        const { mensajeId } = data;
 
-            await mensajeServicio.borrarMensaje(
-                mensajeId,
-                socket.usuario.id
-            );
+        await mensajeServicio.borrarMensaje(
+            mensajeId,
+            socket.usuario.id
+        );
 
-            io.emit('mensajeBorrado', { mensajeId });
-        });
+        io.emit('mensajeBorrado', { mensajeId });
     });
 
     socket.on('disconnect', () => {
