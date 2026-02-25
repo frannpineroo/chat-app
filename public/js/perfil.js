@@ -38,24 +38,45 @@ socket.on('mensaje', ( data ) => {
 
 // Recibir mensaje editado
 socket.on('mensajeEditado', ( data ) => {
-    const li = document.getElementById(`mensaje-${ data.mensajeActualizado.id }`);
-    if ( li ) {
-        li.querySelector('.texto').textContent = `${ data.mensajeActualizado.id } (editado)`;
-    }
+    agregarMensajeAlDOM( data.mensajeActualizado );
+    // const mensaje = data.mensajeActualizado;
+
+    // const li = document.getElementById(`mensaje-${ mensaje.id }`);
+
+    // if ( li ) {
+    //     li.querySelector('.texto').innerHTML = `
+    //     ${ mensaje.nombre }: ${ mensaje.info } 
+    //     <span class="editado">(editado)</span>`;
+    // }
 });
 
 // Agregar Mensaje al DOM
 function agregarMensajeAlDOM( data ) {
-    const li = document.createElement('li');
+    let li = document.getElementById(`mensaje-${ data.id }`);
+    
+    if (li) {
+        li.innerHTML = `
+            <span class="texto">
+                ${data.nombre}: ${data.info}
+                ${data.editado ? '<span class="editado">(editado)</span>' : ''}
+            </span>
+            ${Number(data.userId) === Number(miId)
+                ? `<button onclick="editarMensaje(${data.id})">✏️</button>`
+                : ''}
+        `;
+        return;
+    }
+
+    li = document.createElement('li');
     li.id = `mensaje-${ data.id }`;
 
     li.innerHTML = `
         <span class="texto">
-            ${data.nombre}: ${data.info}
-            ${data.editado ? '<span class="editado">(editado)</span>' : ''}
+            ${ data.nombre }: ${ data.info }
+            ${ data.editado ? '<span class="editado">(editado)</span>' : '' }
         </span>
-        ${Number(data.userId) === Number(miId) 
-            ? `<button onclick="editarMensaje(${data.id})">✏️</button>` 
+        ${Number(data.userId) === Number(miId)
+            ? `<button onclick="editarMensaje(${data.id})">✏️</button>`
             : ''}
     `;
 

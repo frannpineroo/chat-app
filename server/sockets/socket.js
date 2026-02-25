@@ -62,10 +62,19 @@ io.on('connection', (socket) => {
             const mensajeActualizado = await mensajeServicio.editarMensaje(
                 mensajeId,
                 nuevoInfo,
-                socket.usuario.id
+                socket.usuario.id,
+                socket.usuario.nombre
             );
 
-            io.emit('mensajeEditado', { mensajeActualizado });
+            io.emit('mensajeEditado', { 
+                mensajeActualizado: {
+                    id: mensajeActualizado.id,
+                    info: mensajeActualizado.info,
+                    editado: mensajeActualizado.editado,
+                    userId: mensajeActualizado.userId,
+                    nombre: mensajeActualizado.usuario.nombre
+                }
+            });
         });
     });
 

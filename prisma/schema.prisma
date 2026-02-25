@@ -60,6 +60,7 @@ model Mensaje {
   enviadoEn     DateTime  @default(now()) @map("sent_at")
   arhivado      Boolean   @default(false) @map("is_archived")
   leido         Boolean   @default(false) @map("is_read")
+  editado       Boolean   @default(false) @map("is_edited")
   chatId        Int       @map("chats_id_chat")
   userId        Int       @map("users_id_users")
   

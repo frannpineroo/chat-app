@@ -23,7 +23,11 @@ const editarMensaje = async ( mensajeId, nuevoInfo, userId ) => {
             id: mensajeId,
             userId: userId // seguridad: solo el autor del mensaje puede editarlo
         }, 
-        data: { info: nuevoInfo }
+        data: { 
+            info: nuevoInfo,
+            editado: true
+        },
+        include: { usuario: true }
     });
 };
 
