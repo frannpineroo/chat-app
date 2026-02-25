@@ -12,8 +12,9 @@ const crearMensaje = async ( data ) => {
 
 const obtenerMensajes = async () => {
     return await prisma.mensaje.findMany({
+        where: { arhivado: false },
         include: { usuario: true },
-        orderBy: { createdAt: 'asc' }
+        orderBy: { enviadoEn: 'asc' }
     });
 };
 

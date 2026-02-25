@@ -19,6 +19,12 @@ socket.on('usuario', ( data ) => {
     miId = data.id;
 });
 
+// Carga inicial de mensajes
+socket.on('cargarMensajes', ( mensajes ) => {
+    lista.innerHTML = ''; // Limpiar mensajes anteriores
+    mensajes.forEach( mensaje => agregarMensajeAlDOM( mensaje ) );
+})
+
 // Enviar mensaje
 boton.addEventListener('click', () => {
     const mensaje = input.value.trim();

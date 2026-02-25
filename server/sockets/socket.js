@@ -33,10 +33,21 @@ io.use(( socket, next ) => {
 });
 
 // Conexion a Socket.IO
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
 
     console.log('Usuario conectado: ', socket.usuario);
     socket.emit('usuario', { id: socket.usuario.id })
+
+    // Cargar mensajes existentes
+    const mensajes = await mensajeServicio.listarMensajes();
+    const mensajesFormateados = mensajes.map( m => ({
+        id: m.id,
+        info: m.info,
+        editado: m.editado ?? false,
+        userId: m.userId,
+        nombre: m.usuario.nombre
+    }));
+    socket.emit('cargarMensajes', mensajesFormateados);
 
     socket.on('mensaje', async ( data ) => {
         const { info, chatId } = data;
