@@ -4,9 +4,9 @@
         console.log('Conectado al servidor');
 
         socket.emit('crear-usuario', {
-            firstName: 'Fran',
-            lastName: 'García',
-            email: 'fran.garcia@example.com',
+            nombre: 'Juan',
+            apellido: 'Perez',
+            email: 'juanperez@example.com',
             contra: 'contra1234'
         }, function( resp ) {
             console.log( 'Respuesta del servidor:', resp );

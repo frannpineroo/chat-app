@@ -41,8 +41,7 @@ const obtenerUsuarios = async () => {
 
 const obtenerUsuarioPorId = async ( id ) => {
     return await prisma.usuario.findUnique({
-        where: { id },
-        data
+        where: { id }
     })
 }
 
