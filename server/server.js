@@ -1,4 +1,5 @@
 const chatRouter = require('./controllers/ChatController.js');
+const usuarioRouter = require('./controllers/usuario.controller.js');
 
 const express = require('express');
 const socketIO = require('socket.io');
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(express.static(publicPath));
 
 app.use('/api/chat', chatRouter);
+app.use("/api/usuarios", usuarioRouter.router);
 
 // IO = esta es la comunicacion del backend
 module.exports.io = socketIO(server);
