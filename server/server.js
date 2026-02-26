@@ -29,7 +29,7 @@ app.use('/usuarios', usuarioRoutes);
 app.use('/auth', authRoutes);
 
 app.get('/', redirigirSiAutenticado, (req, res) => {
-  res.sendFile(path.join(publicPath, 'index.html'));
+  res.sendFile(path.join(publicPath, 'registro.html'));
 });
 
 app.get('/login', redirigirSiAutenticado, (req, res) => {
