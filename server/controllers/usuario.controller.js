@@ -21,6 +21,21 @@ const registrarUsuario = async ( req, res ) => {
     }
 };
 
+const listarUsuarios = async ( req, res ) => {
+    try {
+        const usuarios = await usuarioServicio.listarUsuarios();
+
+        res.json(usuarios);
+    } catch ( error ) {
+        console.error(error.message);
+
+        res.status(500).json({
+            error: error.message
+        });
+    }
+}
+
 module.exports = {
-    registrarUsuario
+    registrarUsuario,
+    listarUsuarios
 }

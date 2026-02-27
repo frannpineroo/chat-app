@@ -36,9 +36,13 @@ app.get('/login', redirigirSiAutenticado, (req, res) => {
   res.sendFile(path.join(publicPath, 'login.html'));
 });
 
-// Ruta protegida para el perfil del usuario
-app.get('/perfil', verificarToken, ( req, res ) => {
-    res.sendFile(path.join( publicPath, '../views/perfil.html' ));
+// Ruta protegida para el chat global
+app.get('/global', verificarToken, ( req, res ) => {
+    res.sendFile(path.join( publicPath, '../views/global.html' ));
+})
+
+app.get('/usuarios', verificarToken, ( req, res ) => {
+  res.sendFile(path.join( publicPath, '../views/usuarios.html' ));
 })
 
 
