@@ -22,7 +22,11 @@
 
 <script>
     async function cargarUsuarios() {
-        const res = await fetch('/usuarios');
+        const res = await fetch('/api/usuarios', {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        });
         const usuarios = await res.json();
 
         const contenedor = document.getElementById('listaUsuarios');

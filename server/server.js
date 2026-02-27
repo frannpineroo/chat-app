@@ -23,11 +23,13 @@ app.use(express.json());
 app.use(express.static(publicPath));
 
 
-// RUTAS HTTP
+// RUTAS API
 
-app.use('/usuarios', usuarioRoutes);
+app.use('/api/usuarios', usuarioRoutes);
 app.use('/auth', authRoutes);
 
+
+// RUTAS VISTAS
 app.get('/', redirigirSiAutenticado, (req, res) => {
   res.sendFile(path.join(publicPath, 'registro.html'));
 });
