@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="light">
+<html lang="es" data-theme="business">
 
 <head>
     <meta charset="UTF-8">
@@ -10,7 +10,7 @@
 
 <body class="min-h-screen bg-base-200 p-6">
 
-    <div class="max-w-2xl mx-auto">
+    <div class="max-w-2xl mx-auto bg-base-100 p-6 rounded-box shadow-lg">
 
         <h1 class="text-3xl font-bold mb-6 text-center">
             Usuarios
@@ -27,13 +27,19 @@
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         });
+        if (!res.ok) {
+            console.error('Error en la respuesta:', res.status);
+            return;
+        }
+
         const usuarios = await res.json();
 
         const contenedor = document.getElementById('listaUsuarios');
+        contenedor.innerHTML = '';
 
         usuarios.forEach(usuario => {
             const card = document.createElement('div');
-            card.className = "card bg-base-100 shadow-md hover:shadow-lg cursor-pointer transition";
+            card.className = "card bg-base-200 hover:bg-base-300 shadow transition";
 
             card.innerHTML = `
                 <div class="card-body flex-row items-center justify-between">
@@ -48,7 +54,7 @@
             `;
 
             card.addEventListener('click', () => {
-                window.location.href = '/chat.html';
+                window.location.href = '/global';
             });
 
             contenedor.appendChild(card);
