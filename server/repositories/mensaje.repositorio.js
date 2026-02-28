@@ -18,6 +18,16 @@ const obtenerMensajes = async () => {
     });
 };
 
+const obtenerMensajesPorChat = async ( chatId ) => {
+    return await prisma.mensaje.findMany({
+        where: {
+            chatId: chatId
+        },
+        include: { usuario: true },
+        orderBy: { enviadoEn: 'asc' }
+    });
+};
+
 const editarMensaje = async ( mensajeId, nuevoInfo, userId ) => {
     return await prisma.mensaje.update({
         where: {
@@ -47,6 +57,7 @@ const borrarMensaje = async ( mensajeId, userId ) => {
 module.exports = {
     crearMensaje,
     obtenerMensajes,
+    obtenerMensajesPorChat,
     editarMensaje,
     borrarMensaje
 }

@@ -1,4 +1,4 @@
-const chatServicio = require('../services/chat.service');
+const chatServicio = require('../services/chat.servicio');
 
 class ChatController {
     async obtenerOCrearChatPrivado( req, res ) {

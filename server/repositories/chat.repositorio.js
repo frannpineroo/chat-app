@@ -5,7 +5,7 @@ class ChatRepositorio {
     async buscarChatPrivado( usuarioA, usuarioB ) {
         return await prisma.chat.findFirst({
             where: {
-                isGroup: false,
+                isPrivate: true,
                 miembros: {
                     some: { usuarioId: usuarioA}
                 },
@@ -25,7 +25,7 @@ class ChatRepositorio {
         return await prisma.chat.create({
             data: {
                 nombreChat: `Chat entre ${usuarioA} y ${usuarioB}`,
-                isGroup: false,
+                isPrivate: true,
                 miembros: {
                     create: [
                         { usuarioId: usuarioA },

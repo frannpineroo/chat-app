@@ -13,6 +13,7 @@ const cookieParser = require('cookie-parser');
 const usuarioRoutes = require('./routes/usuario.routes');
 const authRoutes = require('./routes/auth.routes');
 const chatRoutes = require('./routes/chat.routes');
+const mensajeRoutes = require('./routes/mensaje.routes');
 
 // CONFIGURACIÓN DEL SERVIDOR
 const app = express();
@@ -32,6 +33,7 @@ app.use(express.static(publicPath));
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/auth', authRoutes);
 app.use('/api/chats', chatRoutes);
+app.use('/api/mensajes', mensajeRoutes);
 
 // RUTAS VISTAS
 app.get('/', redirigirSiAutenticado, (req, res) => {
