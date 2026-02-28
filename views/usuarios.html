@@ -53,8 +53,27 @@
                 </div>
             `;
 
-            card.addEventListener('click', () => {
-                window.location.href = '/global';
+            card.addEventListener('click', async () => {
+                const token = localStorage.getItem('token');
+
+                const res = await fetch('/api/chats/privado', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({
+                        usuarioDestinoId: usuario.id
+                    })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    window.location.href = `/chat/${data.chatId}`;
+                } else {
+                    console.error('Error al crear chat privado:', data);
+                    alert('No se pudo iniciar el chat privado');
+                }
             });
 
             contenedor.appendChild(card);

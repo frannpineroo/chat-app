@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="business">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Chat Privado</title>
+</head>
+<body class="h-screen flex flex-col p-4">
+
+    <div class="flex items-center gap-3 mb-4">
+        <a href="/" class="btn btn-ghost btn-sm">← Volver</a>
+        <h2 class="text-2xl font-bold">Chat Privado</h2>
+        <span id="nombreContacto" class="text-base-content/50 text-sm"></span>
+    </div>
+
+    <div id="mensajes" class="flex-1 overflow-y-auto flex flex-col gap-2 mb-4"></div>
+
+    <div class="flex gap-2">
+        <input id="inputMensaje" placeholder="Escribi un mensaje..." class="input input-bordered flex-1"/>
+        <button id="btnEnviar" class="btn btn-primary">Enviar</button>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const chatId = window.location.pathname.split('/')[2];
+        const token = localStorage.getItem('token');
+
+        // Decodificar el usuario actual del token
+        function getUsuarioIdDesdeToken(token) {
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                return payload.id || payload.userId || payload.sub;
+            } catch {
+                return null;
+            }
+        }
+
+        const miId = getUsuarioIdDesdeToken(token);
+
+        async function cargarMensajes() {
+            const res = await fetch(`/api/mensajes/${chatId}`, {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const mensajes = await res.json();
+            renderizarMensajes(mensajes);
+        }
+
+        function renderizarMensajes(mensajes) {
+            const contenedor = document.getElementById('mensajes');
+            contenedor.innerHTML = '';
+
+            mensajes.forEach(msg => {
+                const esMio = msg.emisorId === miId || msg.usuarioId === miId;
+                const burbuja = document.createElement('div');
+                burbuja.className = `chat ${esMio ? 'chat-end' : 'chat-start'}`;
+                burbuja.innerHTML = `
+                    <div class="chat-bubble ${esMio ? 'chat-bubble-primary' : ''}">
+                        ${msg.contenido}
+                    </div>
+                    <div class="chat-footer opacity-50 text-xs">
+                        ${new Date(msg.creadoEn || msg.createdAt).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                `;
+                contenedor.appendChild(burbuja);
+            });
+
+            contenedor.scrollTop = contenedor.scrollHeight;
+        }
+
+        function enviarMensaje() {
+            const input = document.getElementById('inputMensaje');
+            const contenido = input.value.trim();
+            if ( !contenido ) return;
+            
+            socket.emit('enviarMensajePrivado', {
+                chatId,
+                contenido
+            });
+
+            input.value = '';
+        }
+
+        function agregarMensaje( msg ) {
+            const contenedor = document.getElementById('mensajes');
+            const esMio = msg.emisorId === miId;
+
+            const burbuja = document.createElement('div');
+            burbuja.className = `chat ${esMio ? 'chat-end' : 'chat-start'}`;
+            burbuja.innerHTML = `
+                <div class="chat-bubble ${esMio ? 'chat-bubble-primary' : ''}">
+                    ${msg.contenido}
+                </div>
+                <div class="chat-footer opacity-50 text-xs">
+                    ${new Date(msg.creadoEn).toLocaleTimeString('es-AR', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })}
+                </div>
+            `;
+
+            contenedor.appendChild( burbuja );
+            contender.scrollTop = contenedor.scrollHeight;
+        }
+
+        document.getElementById('btnEnviar').addEventListener('click', enviarMensaje);
+
+        document.getElementById('inputMensaje').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') enviarMensaje();
+        });
+
+        // Socket para mensajes en tiempo real
+        const socket = io({ auth: { token } });
+
+        socket.emit('unirseChat', chatId);
+
+        socket.on('nuevoMensajePrivado', (mensaje) => {
+            agregarMensaje(mensaje);
+        });
+
+        // Carga inicial
+        cargarMensajes();
+    </script>
+</body>
+</html>
