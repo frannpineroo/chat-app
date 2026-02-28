@@ -48,6 +48,10 @@
 
                 alert('Inicio de sesión exitoso');
                 console.log(data);
+                
+                localStorage.setItem("usuarioId", data.usuario.id);
+                // Redirigir
+                window.location.href = "Principal.html";
             } catch ( err ) {
                 alert( err.message );
             }

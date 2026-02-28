@@ -1,31 +1,20 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Principal</title>
 
-</head>
-
-<body>
-
-<div class="chat-page">
-    <div class="top-bar">
-        <h3>Mensajes</h3>
-        <button class="notif-btn" onclick="toggleNotifications()">
-            🔔
-            <span class="badge" id="notifCount">3</span>
-        </button>
-    </div>
-
-    <div class="chat-container">
-        <div class="sidebar" ></div>
-        <div class="message-section" id="messageSection"></div>
-    </div>
-
-    <div id="notificaciones" class="seccion-notificaciones hide"></div>
-</div>
-
-<script>
+//CARGA DE COLUMNA DE CHATS
+function cargarSeccionChat() {
+    fetch("SeccionChat.html")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("No se pudo cargar SeccionChat.html");
+            }
+            return response.text();
+        })
+        .then(html => {
+            document.querySelector(".chats").innerHTML = html;
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+}
 
 let chatIdSeleccionado = 1;
 let showNotifications = false;
@@ -43,7 +32,11 @@ const notifications = [
 ];
 
 function renderChats() {
-    const chatList = document.getElementById("chatList");
+    const chatList = document.querySelector(".chats");
+    if (!chatList) {
+        console.error("No se encontró el contenedor de chats");
+        return;
+    }
     chatList.innerHTML = "";
 
     chats.forEach(chat => {
@@ -121,87 +114,3 @@ renderChats();
 renderMensajes();
 renderNotificaciones();
 
-</script>
-
-</body>
-
-<style>
-.chat-page {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-}
-.top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background: #fff;
-    border-bottom: 1px solid #ddd;
-}
-.notif-btn {
-    position: relative;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-}
-.badge {
-    position: absolute;
-    top: -4px;
-    right: -4px;
-    background: #ff4b5c;
-    color: white;
-    font-size: 10px;
-    padding: 2px 5px;
-    border-radius: 50%;
-}
-.chat-container {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    background-color: #f8f9fb;
-    flex:1;
-    position: relative;
-}
-.seccion-notificaciones {
-    position: fixed;
-    top: 70px;
-    right: 20px;
-    width: 300px;
-    max-height: 80vh;
-    overflow-y: auto;
-    background-color: #f5f5f5;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 8px;
-    z-index: 1000;
-    min-height: 50px;
-}
-.hide { display: none; }
-.show { display: block; }
-
-.chat-list {
-    width: 30%;
-    background: white;
-    border-right: 1px solid #ddd;
-    padding: 10px;
-}
-
-.chat-item {
-    padding: 10px;
-    cursor: pointer;
-    border-bottom: 1px solid #eee;
-}
-
-.chat-item:hover {
-    background: #f0f0f0;
-}
-
-.message-section {
-    flex: 1;
-    padding: 20px;
-}
-</style>
-
-</html>

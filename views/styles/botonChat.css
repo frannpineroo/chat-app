@@ -1,0 +1,81 @@
+/* Botón flotante dentro de la columna de chats */
+.boton-flotante {
+    position: fixed;       /* respecto a .chats */
+    bottom: 20px;
+    left: 20px;               /* inferior izquierda */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;  /* menú desplegable se abre hacia arriba */
+    z-index: 1200;             /* siempre sobre la lista de chats */
+}
+
+/* Icono del botón */
+#chatIcon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #007bff;
+    color: white;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: 0.2s;
+    
+}
+
+#chatIcon:hover {
+    background: #0056d2;
+    transform: scale(1.05);
+}
+
+/* Menú desplegable del botón flotante */
+#menu {
+    position: absolute;
+    bottom: 70px; /* encima del botón */
+    left: 0;      /* alineado al botón */
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    display: none;
+    flex-direction: column;
+    width: 180px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    z-index: 1250;
+}
+
+.menuItem {
+    padding: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.menuItem:hover {
+    background: #f0f0f0;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    display: none;          
+    align-items: center;    
+    justify-content: center;
+    z-index: 1300;          /* debe estar por encima de chats */
+}
+
+.modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-height: 90vh;
+    overflow-y: auto;
+    width: 400px;
+    
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}

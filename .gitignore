@@ -3,3 +3,4 @@ node_modules/
 /generated/prisma
 package-lock.json
 package.json
+hashpassword.js

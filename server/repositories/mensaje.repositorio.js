@@ -5,14 +5,17 @@ const crearMensaje = async ( data ) => {
         data: {
             info: data.info,
             userId: data.userId,
-            chatId: 1 // Asignamos un chatId fijo por ahora, luego se puede mejorar para manejar múltiples chats
+            chatId: data.chatId // Asignamos un chatId fijo por ahora, luego se puede mejorar para manejar múltiples chats
         }
     });
 };
 
-const obtenerMensajes = async () => {
+const obtenerMensajes = async (chatId) => {
     return await prisma.mensaje.findMany({
-        where: { arhivado: false },
+        where: { 
+            chatId: chatId,
+            arhivado: false 
+        },
         include: { usuario: true },
         orderBy: { enviadoEn: 'asc' }
     });

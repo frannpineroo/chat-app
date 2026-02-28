@@ -1,7 +1,7 @@
 const { io } = require('../server');
 const jwt = require('jsonwebtoken');
 
-const usuarioServicio = require('../services/usuario.servicio');
+const prisma = require('../prisma/client');
 const mensajeServicio = require('../services/mensaje.servicio');
 
 // Middleware para validar el token JWT
@@ -38,7 +38,8 @@ io.on('connection', async (socket) => {
     socket.emit('usuario', { id: socket.usuario.id })
 
     // Cargar mensajes existentes
-    const mensajes = await mensajeServicio.listarMensajes();
+    socket.on('cargarMensajesChat', async ({ chatId }) => {
+    const mensajes = await mensajeServicio.listarMensajes(chatId);
     const mensajesFormateados = mensajes.map( m => ({
         id: m.id,
         info: m.info,
@@ -47,6 +48,7 @@ io.on('connection', async (socket) => {
         nombre: m.usuario.nombre
     }));
     socket.emit('cargarMensajes', mensajesFormateados);
+    });
 
     socket.on('mensaje', async ( data ) => {
         const { info, chatId } = data;
@@ -58,7 +60,8 @@ io.on('connection', async (socket) => {
             chatId
         );
 
-        io.emit('mensaje', {
+        socket.join(`chat-${chatId}`);
+        io.to(`chat-${chatId}`).emit('mensaje', {
             id: mensajeGuardado.id,
             info: mensajeGuardado.info,
             userId: mensajeGuardado.userId,

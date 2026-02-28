@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Principal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="stylesheet" href="styles/seccionChat.css">
+    <link rel="stylesheet" href="styles/mensajes.css">
+    <link rel="stylesheet" href="styles/principal.css">
+    <link rel="stylesheet" href="styles/botonChat.css">
+</head>
+
+<body>
+
+<div class="pagina-principal">
+    <div class="top-bar">
+        <h3>Mensajes</h3>
+        <button class="notif-btn" onclick="toggleNotifications()">
+            🔔
+            <span class="badge" id="notifCount">3</span>
+        </button>
+    </div>
+
+    <div class="chat-contenedor">
+        
+        <div class="chats">
+            <div class="busqueda">
+                <form id="searchForm">
+                    <input id="texto" placeholder="Buscar por nombre..." />
+                    <button type="submit">Buscar</button>
+                </form>
+
+                <div id="Resultados" class="chat-resultados"></div>
+            </div>
+            <div class="seccionChat">
+                <h5>CHATS PRIVADOS</h5>
+                <div id="privateChats"></div>
+            </div>
+
+            <div class="seccionChat">
+                 <h5>CHATS GRUPALES</h5>
+                <div id="groupChats"></div>
+            </div>
+            
+            
+        </div>
+        
+        <div class="message-section" id="messageSection">
+            <div id="mensajes" class="flex-1 overflow-y-auto flex flex-col gap-2 mb-4"></div>
+
+            <div class="input-area">
+                <input id="inputMensaje" placeholder="Escribi un mensaje..." />
+                <button id="btnEnviar">Enviar</button>
+            </div>
+        </div>
+        
+    </div>
+
+    <div id="notificaciones" class="seccion-notificaciones hide"></div>
+</div>
+
+<div class="boton-flotante">
+            <!-- Icono flotante -->
+            <div id="chatIcon">+</div>
+
+            <!-- Menú desplegable -->
+            <div id="menu">
+                <div class="menuItem" onclick="nuevoChat()">Nuevo chat</div>
+                <div class="menuItem" onclick="nuevoGrupo()">Nuevo grupo</div>
+            </div>
+
+            <!-- Modal Chat Individual -->
+            <div class="overlay" id="individualModal">
+                <div class="modal">
+                    <h3>Buscar usuario</h3>
+                    <input type="text" id="buscarNombre" placeholder="Nombre de usuario">
+                    <button onclick="buscarUsuarios()">Buscar</button>
+                    <div id="ResultadosIndividual"></div>
+                    <button onclick="cerrarCuadro()">Cancelar</button>
+                    <button onclick="crearChat()">Enviar mensaje</button>
+                </div>
+            </div>
+
+            <!-- Modal Chat Grupal -->
+            <div class="overlay" id="groupModal">
+                <div class="modal">
+                    <h3>Crear Grupo</h3>
+
+                    <label>Nombre del grupo</label>
+                    <input type="text" id="nombreGrupo">
+
+                    <label>
+                        <input type="checkbox" id="isModerated">
+                        Grupo moderado
+                    </label>
+
+                    <h4>Buscar usuarios</h4>
+                    <input type="text" id="buscarUsuarios">
+                    <button onclick="buscarUsuariosGrupo()">Buscar</button>
+
+                    <div id="usuariosEncontrados"></div>
+
+                    <h4>Usuarios seleccionados</h4>
+                    <div id="usuariosElegidos"></div>
+
+                    <button onclick="cerrarCuadro()">Cancelar</button>
+                    <button onclick="createGroupChat()">Crear chat</button>
+                </div>
+            </div>
+        </div>
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/botonChat.js"></script>
+    <script src="js/seccionChat.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Chat</title>
+
+  <link rel="stylesheet" href="seccionChat.css">
+
+</head>
+
+<body>
+
+<div class="chats">
+
+    <div class="busqueda">
+        <form id="searchForm">
+            <input id="texto" placeholder="Buscar por nombre..." />
+            <button type="submit">Buscar</button>
+        </form>
+
+        <div id="Resultados" class="chat-resultados"></div>
+    </div>
+
+    <div class="seccionChat">
+        <h5>CHATS PRIVADOS</h5>
+        <div id="privateChats"></div>
+    </div>
+
+    <div class="seccionChat">
+        <h5>CHATS GRUPALES</h5>
+        <div id="groupChats"></div>
+    </div>
+
+</div>
+
+<script src="seccionChat.js"></script>
+
+</body>
+
+</html>

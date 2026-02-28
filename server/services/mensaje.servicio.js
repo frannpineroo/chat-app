@@ -8,8 +8,8 @@ const guardarMensaje = async ( info, userId, chatId ) => {
     });
 };
 
-const listarMensajes = async () => {
-    return await mensajeRepo.obtenerMensajes();
+const listarMensajes = async (chatId) => {
+    return await mensajeRepo.obtenerMensajes(chatId);
 };
 
 const editarMensaje = async ( mensajeId, nuevoInfo, userId ) => {

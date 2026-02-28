@@ -1,221 +1,33 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Demo Chat</title>
-<style>
-body{
-    margin:0;
-    font-family:Arial, Helvetica, sans-serif;
-    display:flex;
-    height:100vh;
-}
+const chatIcon = document.getElementById("chatIcon");
+const menu = document.getElementById("menu");
 
-/* ===== Página principal ===== */
-#mainPage{
-    display:flex;
-    width:100%;
-}
-
-#chatList{
-    width:25%;
-    background:#f4f4f4;
-    border-right:1px solid #ccc;
-    padding:10px;
-    box-sizing:border-box;
-}
-
-.chatItem{
-    padding:10px;
-    background:white;
-    margin-bottom:8px;
-    cursor:pointer;
-    border-radius:5px;
-}
-
-.chatItem.active{
-    background:#d0e6ff;
-}
-
-#chatWindow{
-    flex:1;
-    padding:20px;
-}
-
-/* ===== Botón flotante ===== */
-#chatIcon{
-    position:fixed;
-    bottom:20px;
-    right:20px;
-    width:60px;
-    height:60px;
-    border-radius:50%;
-    background:#007bff;
-    color:white;
-    font-size:30px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-}
-
-#menu{
-    position:fixed;
-    bottom:90px;
-    right:20px;
-    background:white;
-    border:1px solid #ccc;
-    border-radius:8px;
-    display:none;
-    flex-direction:column;
-    width:220px;
-}
-
-.menuItem{
-    padding:12px;
-    cursor:pointer;
-    border-bottom:1px solid #eee;
-}
-
-.menuItem:hover{
-    background:#f0f0f0;
-}
-
-/* ===== Pantallas emergentes ===== */
-.overlay{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.4);
-    display:none;
-    align-items:center;
-    justify-content:center;
-}
-
-.modal{
-    background:white;
-    padding:20px;
-    width:400px;
-    border-radius:8px;
-    max-height:90vh;
-    overflow:auto;
-}
-
-input[type="text"]{
-    width:100%;
-    padding:8px;
-    margin:5px 0 10px 0;
-    box-sizing:border-box;
-}
-
-.userResult{
-    padding:6px;
-    background:#f1f1f1;
-    margin:5px 0;
-    cursor:pointer;
-    border-radius:4px;
-}
-
-.userResult.active {
-    background-color: #d0e6ff;
-    border-left: 4px solid #2196F3;
-}
-
-.selectedUser{
-    background:#cce5ff;
-    padding:5px;
-    margin:5px 5px 0 0;
-    display:inline-block;
-    border-radius:4px;
-}
-
-button{
-    padding:8px 12px;
-    margin:10px 5px 0 0;
-    cursor:pointer;
-}
-</style>
-</head>
-<body>
-
-<!-- Página principal -->
-<div id="mainPage">
-    <div id="chatList">
-        <h3>Chats</h3>
-        <div id="chats"></div>
-    </div>
-    <div id="chatWindow">
-        <h2>Selecciona un chat</h2>
-        <div id="chatContent"></div>
-    </div>
-</div>
-
-<!-- Icono flotante -->
-<div id="chatIcon">+</div>
-
-<!-- Menú desplegable -->
-<div id="menu">
-    <div class="menuItem" onclick="nuevoChat()">Nuevo chat</div>
-    <div class="menuItem" onclick="nuevoGrupo()">Nuevo grupo</div>
-</div>
-
-<!-- Modal Chat Individual -->
-<div class="overlay" id="individualModal">
-    <div class="modal">
-        <h3>Buscar usuario</h3>
-        <input type="text" id="buscarNombre" placeholder="Nombre de usuario">
-        <button onclick="buscarUsuarios()">Buscar</button>
-        <div id="Resultados"></div>
-        <button onclick="cerrarCuadro()">Cancelar</button>
-        <button onclick="crearChat()">Enviar mensaje</button>
-    </div>
-</div>
-
-<!-- Modal Chat Grupal -->
-<div class="overlay" id="groupModal">
-    <div class="modal">
-        <h3>Crear Grupo</h3>
-
-        <label>Nombre del grupo</label>
-        <input type="text" id="nombreGrupo">
-
-        <label>
-            <input type="checkbox" id="isModerated">
-            Grupo moderado
-        </label>
-
-        <h4>Buscar usuarios</h4>
-        <input type="text" id="buscarUsuarios">
-        <button onclick="buscarUsuariosGrupo()">Buscar</button>
-
-        <div id="usuariosEncontrados"></div>
-
-        <h4>Usuarios seleccionados</h4>
-        <div id="usuariosElegidos"></div>
-
-        <button onclick="cerrarCuadro()">Cancelar</button>
-        <button onclick="createGroupChat()">Crear chat</button>
-    </div>
-</div>
-
-<script>
-
-const dummyUsers = ["Ana","Luis","Carlos","María","Pedro","Lucía","Sofía","Miguel"];
-
-document.getElementById("chatIcon").onclick = () => {
-    const menu = document.getElementById("menu");
+// Evitar que clicks dentro del menú lo cierren
+chatIcon.addEventListener("click", e => {
+    e.stopPropagation();
     menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-};
+});
+menu.addEventListener("click", e => e.stopPropagation());
+
+// Cerrar menú si se hace click fuera
+document.addEventListener("click", () => {
+    menu.style.display = "none";
+});
+
+
+//Agregado
+
+//document.getElementById("chatIcon").onclick = () => {
+//    const menu = document.getElementById("menu");
+//    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+//};
 
 function nuevoChat(){
-    document.getElementById("menu").style.display="none";
+    menu.style.display="none";
     document.getElementById("individualModal").style.display="flex";
 }
 
 function nuevoGrupo(){
-    document.getElementById("menu").style.display="none";
+    menu.style.display="none";
     document.getElementById("groupModal").style.display="flex";
 }
 
@@ -227,7 +39,7 @@ function cerrarCuadro(){
 }
 
 //METODOS PARA CHAT INDIVIDUAL
-let chats = [];
+let chatss = [];
 let selectedUsers = [];
 let usuarioSeleccionado = null;
 
@@ -246,7 +58,7 @@ async function buscarUsuarios(){
 }
 
 function mostrarResultadosBusqueda(usuarios){
-    const container = document.getElementById("Resultados");
+    const container = document.getElementById("ResultadosIndividual");
     container.innerHTML = "";
 
     if(usuarios.length === 0){
@@ -271,7 +83,7 @@ function mostrarResultadosBusqueda(usuarios){
 
 function addChat(usuarios){
     usuarios.forEach(usuario => {
-        chats.push(usuario);
+        chatss.push(usuario);
     });
     renderChats();
     openChat(usuarios[0]);
@@ -298,7 +110,7 @@ async function crearChat(e){ //REVISAR ESTE METODO CUANDO SE ADAPTE A LA PAGINA 
         alert("Selecciona un usuario primero");
         return;
     }
-    const existe = chats.find(u => u.id === usuarioSeleccionado.id);
+    const existe = chatss.find(u => u.id === usuarioSeleccionado.id);
 
     if(existe){
         openChat(existe);
@@ -317,7 +129,7 @@ async function crearChat(e){ //REVISAR ESTE METODO CUANDO SE ADAPTE A LA PAGINA 
         }
         const nuevoChat = await response.json();
 
-        chats.push(nuevoChat);
+        chatss.push(nuevoChat);
         renderChats();
         openChat(nuevoChat);
         cerrarCuadro();
@@ -428,7 +240,7 @@ async function createGroupChat(){  //REVISAR ESTE METODO CUANDO SE ADAPTE A LA P
 
         const nuevoGrupo = await response.json();
 
-        chats.push(nuevoGrupo);
+        chatss.push(nuevoGrupo);
         renderChats();
         openChat(nuevoGrupo);
 
@@ -444,7 +256,6 @@ async function createGroupChat(){  //REVISAR ESTE METODO CUANDO SE ADAPTE A LA P
     }
 }
 
-
 function createGroupChat(){
     const name=document.getElementById("nombreGrupo").value;
     if(name){
@@ -453,13 +264,11 @@ function createGroupChat(){
     }
 }
 
-
-
 function renderChats(){
     const container=document.getElementById("chats");
     container.innerHTML="";
     
-    chats.forEach(usuario=>{
+    chatss.forEach(usuario=>{
         const div=document.createElement("div");
         div.className="chatItem";
         div.textContent=usuario.nombre;
@@ -471,7 +280,10 @@ function renderChats(){
 
 
 
-//POR AHORA NO SE USAN
+
+
+//POR AHORA NO SE USA
+
 function searchUsers(){
     const query = document.getElementById("buscarUsuarios").value.toLowerCase();
     const resultsDiv = document.getElementById("usuariosEncontrados");
@@ -506,13 +318,3 @@ function mostrarResultados() {
         container.appendChild(div);
     });
 }
-
-//function openChat(usuario){
-//    document.getElementById("chatWindow").innerHTML =
-//        `<h2>${usuario.nombre}</h2>
-//         <p>Escribe tu primer mensaje...</p>`;
-//}
-</script>
-
-</body>
-</html>

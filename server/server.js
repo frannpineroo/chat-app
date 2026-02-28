@@ -1,5 +1,6 @@
 const verificarToken = require('./middlewares/auth.middleware');
 const redirigirSiAutenticado = require('./middlewares/redirect.middleware');
+const chatRouter = require('./controllers/ChatController.js');
 
 const express = require('express');
 const socketIO = require('socket.io');
@@ -13,7 +14,7 @@ const authRoutes = require('./routes/auth.routes');
 const app = express();
 let server = http.createServer(app);
 
-const publicPath = path.resolve(__dirname, '../public/pages');
+const publicPath = path.resolve(__dirname, '../views');
 const port = process.env.PORT || 3000;
 
 //MIDDLEWARES
@@ -27,6 +28,7 @@ app.use(express.static(publicPath));
 
 app.use('/usuarios', usuarioRoutes);
 app.use('/auth', authRoutes);
+app.use('/chat', chatRouter);
 
 app.get('/', redirigirSiAutenticado, (req, res) => {
   res.sendFile(path.join(publicPath, 'index.html'));

@@ -27,7 +27,7 @@ const registrarUsuario = async ( req, res ) => {
     }
 };
 
-router.get("/:nombre", async (req, res) => {
+const buscarPorNombre = async ( req, res ) => {
     try {
         const nombre = req.params.nombre;
         const usuarios = await usuarioRepo.buscarUsuarioPorNombre(nombre);
@@ -40,8 +40,8 @@ router.get("/:nombre", async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Error al buscar usuarios"});
     }
-});
+};
 
 module.exports = {
-    registrarUsuario, router
+    registrarUsuario, buscarPorNombre
 }
