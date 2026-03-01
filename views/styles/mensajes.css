@@ -1,17 +1,15 @@
-/* ===============================
-   SECCIÓN DE MENSAJES
-================================= */
 
 .message-section {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: #f8f9fb;
     padding: 15px;
+    overflow-y: hidden;
+    background: #f4f6f9;
 }
 
 /* Contenedor scrolleable */
-#mensajes {
+.message-section #mensajes {
     flex: 1;
     overflow-y: auto;
     display: flex;
@@ -24,32 +22,32 @@
    MENSAJE INDIVIDUAL
 ================================= */
 
-.chat {
+.message-section .chat {
     display: flex;
     flex-direction: column;
     max-width: 65%;
 }
 
 /* Mensaje de otros */
-.chat-start {
+.message-section .chat-start {
     align-self: flex-start;
 }
 
 /* Mensaje propio */
-.chat-end {
+.message-section .chat-end {
     align-self: flex-end;
     align-items: flex-end;
 }
 
 /* Nombre */
-.chat-header {
+.message-section .chat-header {
     font-size: 12px;
     color: #777;
     margin-bottom: 4px;
 }
 
 /* Burbuja */
-.chat-bubble {
+.message-section .chat-bubble {
     background: #e4e6eb;
     padding: 10px 14px;
     border-radius: 16px;
@@ -59,7 +57,7 @@
 }
 
 /* Burbuja propia */
-.chat-end .chat-bubble {
+.message-section .chat-end .chat-bubble {
     background: #4f6df5;
     color: white;
 }
@@ -68,13 +66,13 @@
    BOTONES EDITAR / BORRAR
 ================================= */
 
-.chat-footer {
+.message-section .chat-footer {
     display: flex;
     gap: 6px;
     margin-top: 4px;
 }
 
-.chat-footer button {
+.message-section .chat-footer button {
     background: #ffffff;
     border: 1px solid #ddd;
     font-size: 12px;
@@ -84,16 +82,16 @@
     transition: 0.2s;
 }
 
-.chat-footer button:hover {
+.message-section .chat-footer button:hover {
     background: #f0f0f0;
 }
 
-.chat-footer .btn-error {
+.message-section .chat-footer .btn-error {
     border-color: #ff4b5c;
     color: #ff4b5c;
 }
 
-.chat-footer .btn-error:hover {
+.message-section .chat-footer .btn-error:hover {
     background: #ffe5e8;
 }
 

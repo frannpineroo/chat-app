@@ -1,12 +1,10 @@
 
-* {
+html {
     box-sizing: border-box;
 }
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f6f9;
+*, *::before, *::after {
+    box-sizing: inherit;
 }
 
 .chats {
@@ -77,9 +75,10 @@ body {
 .chat-item {
     display: flex;
     align-items: center;
-    padding: 8px;
+    padding: 10px;
     border-radius: 6px;
     cursor: pointer;
+    border-bottom: 1px solid #eee;
 }
 
 .chat-item.active,

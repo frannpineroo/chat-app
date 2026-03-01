@@ -1,7 +1,13 @@
 
+body {
+    /*margin: 0;*/
+    font-family: Arial, sans-serif;
+    /*background: #f4f6f9;*/
+}
+
 .pagina-principal {
-    display: flex;
-    flex-direction: column;
+    /*display: flex;
+    flex-direction: column;*/
     height: 100vh;
     position: relative;
 }
@@ -33,9 +39,9 @@
 .chat-contenedor {
     display: flex;
     flex-direction: row;
-    height: 100%; 
+    height: calc(100vh - 60px);
     background-color: #f8f9fb;
-    flex:1;
+    /*flex:1;*/
     position: relative;
 }
 .seccion-notificaciones {
@@ -49,7 +55,7 @@
     border: 1px solid #ccc;
     padding: 10px;
     border-radius: 8px;
-    z-index: 1000;
+    z-index: 10;
     min-height: 50px;
 }
 .hide { display: none; }
@@ -62,7 +68,7 @@
     padding: 10px;
 } */
 
-.chat-item {
+/*.chat-item {
     padding: 10px;
     cursor: pointer;
     border-bottom: 1px solid #eee;
@@ -70,18 +76,9 @@
 
 .chat-item:hover {
     background: #f0f0f0;
-}
+}*/
 
 /*.message-section {
     flex: 1;
     padding: 20px;
 } */
-
-.message-section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 15px;
-    overflow-y: auto;
-    background: #f4f6f9;
-}

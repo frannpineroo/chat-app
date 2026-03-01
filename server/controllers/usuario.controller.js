@@ -38,10 +38,42 @@ const buscarPorNombre = async ( req, res ) => {
         const dto = usuarios.map(usuario => new verUsuarioDTO(usuario));
         res.json(dto);
     } catch (error) {
-        res.status(500).json({ message: "Error al buscar usuarios"});
+        res.json({ message: "Error al buscar usuarios"});
     }
 };
 
+const buscarUsuarios = async ( req, res ) => {
+    try {
+        const usuarios = await usuarioRepo.obtenerUsuarios();
+
+        if (!usuarios || usuarios.length === 0)
+            return res.json([]);
+        const dto = usuarios.map(usuario => new verUsuarioDTO(usuario));
+        res.json(dto);
+    } catch (error) {
+        res.json({ message: "Error al buscar usuarios"});
+    }
+};
+
+const cambiarEstado = async ( req, res ) => {
+    try {
+        const id = req.params.id;
+        const usuario = await usuarioRepo.obtenerUsuarioPorId(id);
+
+        if (!usuario)
+            return res.json({ message: "Usuario no encontrado" });
+        if (usuario.IsActive == true){
+             usuario.IsActive = false;
+        } else {
+            usuario.IsActive = true;
+        }
+        await usuarioRepo.actualizarUsuario(id, usuario);
+
+        res.json(usuario);
+    } catch (error) {
+        res.json({ message: "Error al buscar usuarios"});
+    }
+};
 module.exports = {
-    registrarUsuario, buscarPorNombre
+    registrarUsuario, buscarPorNombre, buscarUsuarios, cambiarEstado
 }

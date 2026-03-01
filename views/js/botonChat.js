@@ -256,13 +256,13 @@ async function createGroupChat(){  //REVISAR ESTE METODO CUANDO SE ADAPTE A LA P
     }
 }
 
-function createGroupChat(){
-    const name=document.getElementById("nombreGrupo").value;
-    if(name){
-        addChat(name + " (Grupo)");
-        cerrarCuadro();
-    }
-}
+//function createGroupChat(){
+//    const name=document.getElementById("nombreGrupo").value;
+//    if(name){
+//        addChat(name + " (Grupo)");
+//        cerrarCuadro();
+//    }
+//}
 
 function renderChats(){
     const container=document.getElementById("chats");

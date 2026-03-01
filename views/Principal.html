@@ -72,20 +72,24 @@
             </div>
 
             <!-- Modal Chat Individual -->
-            <div class="overlay" id="individualModal">
-                <div class="modal">
+            <div class="cuadro-overlay" id="individualModal">
+                <div class="cuadro-modal">
                     <h3>Buscar usuario</h3>
-                    <input type="text" id="buscarNombre" placeholder="Nombre de usuario">
-                    <button onclick="buscarUsuarios()">Buscar</button>
-                    <div id="ResultadosIndividual"></div>
-                    <button onclick="cerrarCuadro()">Cancelar</button>
-                    <button onclick="crearChat()">Enviar mensaje</button>
+                    <div class="campo-busqueda">
+                        <input type="text" id="buscarNombre" placeholder="Nombre de usuario">
+                        <button onclick="buscarUsuarios()">Buscar</button>
+                    </div>
+                        <div id="ResultadosIndividual"></div>
+                    <div class="botones-modal">
+                        <button onclick="cerrarCuadro()">Cancelar</button>
+                        <button onclick="crearChat()">Enviar mensaje</button>
+                    </div>
                 </div>
             </div>
 
             <!-- Modal Chat Grupal -->
-            <div class="overlay" id="groupModal">
-                <div class="modal">
+            <div class="cuadro-overlay" id="groupModal">
+                <div class="cuadro-modal">
                     <h3>Crear Grupo</h3>
 
                     <label>Nombre del grupo</label>
@@ -97,16 +101,20 @@
                     </label>
 
                     <h4>Buscar usuarios</h4>
-                    <input type="text" id="buscarUsuarios">
-                    <button onclick="buscarUsuariosGrupo()">Buscar</button>
-
+                    <div class="campo-busqueda">
+                        <input type="text" id="buscarUsuarios">
+                        <button onclick="buscarUsuariosGrupo()">Buscar</button>
+                    </div>
                     <div id="usuariosEncontrados"></div>
 
                     <h4>Usuarios seleccionados</h4>
                     <div id="usuariosElegidos"></div>
 
-                    <button onclick="cerrarCuadro()">Cancelar</button>
-                    <button onclick="createGroupChat()">Crear chat</button>
+                    <div class="botones-modal">
+                        <button onclick="cerrarCuadro()">Cancelar</button>
+                        <button onclick="createGroupChat()">Crear chat</button>
+                
+                    </div>
                 </div>
             </div>
         </div>

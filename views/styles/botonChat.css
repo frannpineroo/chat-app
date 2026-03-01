@@ -5,8 +5,8 @@
     left: 20px;               /* inferior izquierda */
     display: flex;
     flex-direction: column;
-    align-items: flex-end;  /* menú desplegable se abre hacia arriba */
-    z-index: 1200;             /* siempre sobre la lista de chats */
+    align-items: flex-start;  /* menú desplegable se abre hacia arriba */
+    z-index: 10;             /* siempre sobre la lista de chats */
 }
 
 /* Icono del botón */
@@ -14,21 +14,21 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: #007bff;
+    background: linear-gradient(135deg, #4f6df5, #3b53c7);
     color: white;
     font-size: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    transition: 0.2s;
+    box-shadow: 0 8px 12px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
     
 }
 
 #chatIcon:hover {
-    background: #0056d2;
-    transform: scale(1.05);
+    /*background: #0056d2;*/
+    transform: scale(1.05) rotate(90deg);;
 }
 
 /* Menú desplegable del botón flotante */
@@ -43,39 +43,173 @@
     flex-direction: column;
     width: 180px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-    z-index: 1250;
+    z-index: 15;
+    overflow: hidden;
+    animation: 0.2s ease;
 }
 
-.menuItem {
+ .menuItem {
     padding: 12px;
     cursor: pointer;
+    font-size: 14px;
     border-bottom: 1px solid #eee;
+    transition: 0.2s;
 }
 
 .menuItem:hover {
-    background: #f0f0f0;
+    /*background: #f0f0f0;*/
+    background: #f2f4ff;
+    padding-left: 18px;
 }
 
-.overlay {
+.cuadro-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.4);
-    display: none;          
-    align-items: center;    
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: none;
+    align-items: center;
     justify-content: center;
-    z-index: 1300;          /* debe estar por encima de chats */
+    /*backdrop-filter: blur(4px);*/
+    z-index: 20;          /* debe estar por encima de chats */
 }
 
-.modal {
+/*.cuadro-modal {
     background: white;
     padding: 20px;
     border-radius: 8px;
     max-height: 90vh;
     overflow-y: auto;
     width: 400px;
-    
+    z-index: 15;
     box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}*/
+
+.cuadro-modal {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    width: 420px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    animation: scaleIn 0.2s ease;
+}
+.cuadro-modal h3, 
+.cuadro-modal h4 {
+    margin: 0;
+}
+
+.cuadro-modal input[type="text"] {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.cuadro-modal input:focus {
+    outline: none;
+    border-color: #4f6df5;
+}
+
+.cuadro-modal button {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.cuadro-modal button:first-of-type {
+    background: #ddd;
+}
+
+.cuadro-modal button:last-of-type {
+    background: #4f6df5;
+    color: white;
+}
+
+.cuadro-modal button:last-of-type:hover {
+    background: #3b53c7;
+}
+
+
+.userResult {
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.userResult:hover {
+    background: #f2f4ff;
+}
+
+.userResult.active {
+    background: #4f6df5;
+    color: white;
+}
+
+.campo-busqueda {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+
+.campo-busqueda input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.campo-busqueda button {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    background: #4f6df5;
+    color: white;
+    cursor: pointer;
+}
+
+
+/* Contenedor de botones */
+.botones-modal {
+    display: flex;
+    justify-content:flex-start; /* los coloca al final del modal */
+    gap: 10px;                 /* separación entre botones */
+    margin-top: 20px;           /* espacio desde contenido superior */
+}
+
+/* Botón Cancelar */
+.botones-modal .btn-cancelar {
+    background: #ddd;
+    color: #333;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.botones-modal .btn-cancelar:hover {
+    background: #ccc;
+}
+
+/* Botón Confirmar (Enviar / Crear) */
+.botones-modal .btn-confirmar {
+    background: #4f6df5;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.botones-modal .btn-confirmar:hover {
+    background: #3b53c7;
 }
