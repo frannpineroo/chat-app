@@ -10,7 +10,7 @@ const redirigirSiAutenticado = ( req, res, next ) => {
 
     try {
         jwt.verify(token, process.env.JWT_SECRET);
-        return res.redirect('/perfil');
+        return res.redirect('/');
     } catch ( err ) {
         return next();
     }

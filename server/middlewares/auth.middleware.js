@@ -10,7 +10,7 @@ const verificarToken = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.usuario = decoded.usuario;
+        req.usuario = decoded;
         next();
     } catch ( err ) {
         return res.redirect('/login');

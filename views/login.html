@@ -10,18 +10,34 @@
     <title>Iniciar Sesión</title>
 </head>
 
-<body>
-    <h1>Chat</h1>
-    <p id="status">Iniciar Sesión</p>
-    
-    <form action="" id="formLogin">
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="contra" placeholder="Contra" required>
-        <button type="submit">Iniciar Sesión</button>
-        <br>
-        <button id="btnLogout">Cerrar Sesión</button>
-    </form>
+<body class="min-h-screen bg-base-200 flex items-center justify-center">
 
+    <div class="card w-96 bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h1 class="card-title text-2xl justify-center">Chat App</h1>
+            <p class="text-center text-sm text-gray-500" id="status" >Iniciar Sesión</p>
+
+            <form action="" id="formLogin" class="space-y-4 mt-4">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Email</span>
+                    </label>
+                    <input type="email" id="email" placeholder="correo@email.com" class="input input-bordered w-full" required>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Contraseña</span>
+                    </label>
+                    <input type="password" id="contra" placeholder="********" class="input input-bordered w-full" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-full">
+                    Iniciar Sesión
+                </button>
+            </form>
+        </div>
+    </div>
     <script>
         const formLogin = document.getElementById('formLogin');
 
@@ -56,16 +72,6 @@
                 alert( err.message );
             }
         });
-    </script>
-
-    <script>
-        document.getElementById('btnLogout').addEventListener('click', async () => {
-            await fetch('/auth/logout', {
-                method: 'POST'
-            });
-
-            alert('Sesión cerrada');
-        })
     </script>
 
 </body>

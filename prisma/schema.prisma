@@ -28,7 +28,7 @@ model Usuario {
 model Chat {
   id            Int           @id @default(autoincrement()) @map("id_chat")
   nombreChat    String        @map("name_chats") @db.VarChar(45)
-  isGroup       Boolean       @default(false) @map("is_group")
+  isPrivate     Boolean       @default(false) @map("is_private")
   isModerated   Boolean       @default(false) @map("is_moderated")
   createdAt     DateTime      @default(now()) @map("created_at")
   updatedAt     DateTime      @updatedAt @map("update_at")

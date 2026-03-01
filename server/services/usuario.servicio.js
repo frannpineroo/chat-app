@@ -62,7 +62,17 @@ const loginUsuario = async ( email, contra ) => {
     };
 };
 
+const listarUsuarios = async () => {
+    const usuarios = await usuarioRepo.obtenerUsuarios();
+    return usuarios.map( u => ({
+        id: u.id,
+        nombre: u.nombre,
+        email: u.email
+    }));
+};
+
 module.exports = {
     registrarUsuario,
-    loginUsuario
+    loginUsuario,
+    listarUsuarios
 }

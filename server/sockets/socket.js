@@ -1,8 +1,8 @@
 const { io } = require('../server');
 const jwt = require('jsonwebtoken');
 
-const prisma = require('../prisma/client');
 const mensajeServicio = require('../services/mensaje.servicio');
+const prisma = require('../prisma/client');
 
 // Middleware para validar el token JWT
 io.use(( socket, next ) => {
@@ -13,14 +13,17 @@ io.use(( socket, next ) => {
         return next( new Error('No autenticado'));
     }
 
-    const token = cookie
+    let token = cookie
         .split('; ')
         .find( c => c.startsWith('token='))
         ?.split('=')[1];
 
+    
     if ( !token ) {
-        return next( new Error('Token no encontrado'));
+        token = socket.handshake.auth?.token;
     }
+
+    if (!token) return next(new Error('No autenticado'));
 
     try {
         const decoded = jwt.verify( token, process.env.JWT_SECRET );
@@ -38,8 +41,7 @@ io.on('connection', async (socket) => {
     socket.emit('usuario', { id: socket.usuario.id })
 
     // Cargar mensajes existentes
-    socket.on('cargarMensajesChat', async ({ chatId }) => {
-    const mensajes = await mensajeServicio.listarMensajes(chatId);
+    const mensajes = await mensajeServicio.listarMensajes();
     const mensajesFormateados = mensajes.map( m => ({
         id: m.id,
         info: m.info,
@@ -48,7 +50,6 @@ io.on('connection', async (socket) => {
         nombre: m.usuario.nombre
     }));
     socket.emit('cargarMensajes', mensajesFormateados);
-    });
 
     socket.on('mensaje', async ( data ) => {
         const { info, chatId } = data;
@@ -57,42 +58,39 @@ io.on('connection', async (socket) => {
         const mensajeGuardado = await mensajeServicio.guardarMensaje(
             info,
             socket.usuario.id,
-            chatId
+            Number(chatId)
         );
 
-        socket.join(`chat-${chatId}`);
-        io.to(`chat-${chatId}`).emit('mensaje', {
+        io.emit('mensaje', {
             id: mensajeGuardado.id,
             info: mensajeGuardado.info,
+            chatId: mensajeGuardado.chatId,
             userId: mensajeGuardado.userId,
             nombre: socket.usuario.nombre,
+            enviadoEn: mensajeGuardado.enviadoEn
         });
     });
 
     // Actualiza el mensaje en la base de datos
-    socket.on('editarMensaje', async ( data ) => {
-        const { mensajeId, nuevoInfo } = data;
+    socket.on('editarMensajePrivado', async ({ mensajeId, nuevoContenido, chatId }) => {
 
         const mensajeActualizado = await mensajeServicio.editarMensaje(
             mensajeId,
-            nuevoInfo,
-            socket.usuario.id,
-            socket.usuario.nombre
+            nuevoContenido,
+            socket.usuario.id
         );
 
-        io.emit('mensajeEditado', { 
-            mensajeActualizado: {
+        io.to(`chat_${chatId}`).emit('mensajeEditado', { 
                 id: mensajeActualizado.id,
                 info: mensajeActualizado.info,
                 editado: mensajeActualizado.editado,
                 userId: mensajeActualizado.userId,
                 nombre: mensajeActualizado.usuario.nombre
-            }
         });
     });
 
     // Archiva el mensaje en la base de datos
-    socket.on('borrarMensaje', async ( data ) => {
+    socket.on('borrarMensajePrivado', async ( data ) => {
         const { mensajeId } = data;
 
         await mensajeServicio.borrarMensaje(
@@ -100,7 +98,7 @@ io.on('connection', async (socket) => {
             socket.usuario.id
         );
 
-        io.emit('mensajeBorrado', { mensajeId });
+        io.to(`chat_${data.chatId}`).emit('mensajeBorrado', { mensajeId });
     });
 
     socket.on('disconnect', () => {

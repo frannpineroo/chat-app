@@ -33,7 +33,7 @@
             const email = document.getElementById('email').value;
             const contra = document.getElementById('contra').value;
 
-            const respuesta = await fetch('/usuarios', {
+            const respuesta = await fetch('/api/usuarios', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

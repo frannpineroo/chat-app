@@ -1,15 +1,13 @@
 const EntityBase = require("./EntityBase");
 
-class Usuario extends EntityBase {
-    constructor( id, nombre, apellido, email, contra, enLinea = false, activo = true, fechaCreacion = new Date()) {
-        super(id);
+class Usuario {
+    constructor( id, nombre, apellido, email, contra, isOnline ) {
+        this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
         this.contra = contra;
-        this.enLinea = enLinea;
-        this.activo = activo;
-        this.fechaCreacion = fechaCreacion;
+        this.isOnline = isOnline;
     }
 }
 

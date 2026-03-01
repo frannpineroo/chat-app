@@ -27,6 +27,20 @@ const registrarUsuario = async ( req, res ) => {
     }
 };
 
+const listarUsuarios = async ( req, res ) => {
+    try {
+        const usuarios = await usuarioServicio.listarUsuarios();
+
+        res.json(usuarios);
+    } catch ( error ) {
+        console.error(error.message);
+
+        res.status(500).json({
+            error: error.message
+        });
+    }
+}
+
 const buscarPorNombre = async ( req, res ) => {
     try {
         const nombre = req.params.nombre;
@@ -75,5 +89,6 @@ const cambiarEstado = async ( req, res ) => {
     }
 };
 module.exports = {
-    registrarUsuario, buscarPorNombre, buscarUsuarios, cambiarEstado
+    registrarUsuario,
+    listarUsuarios, buscarPorNombre, buscarUsuarios, cambiarEstado
 }
