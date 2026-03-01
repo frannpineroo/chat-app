@@ -13,14 +13,17 @@ io.use(( socket, next ) => {
         return next( new Error('No autenticado'));
     }
 
-    const token = cookie
+    let token = cookie
         .split('; ')
         .find( c => c.startsWith('token='))
         ?.split('=')[1];
 
+    
     if ( !token ) {
-        return next( new Error('Token no encontrado'));
+        token = socket.handshake.auth?.token;
     }
+
+    if (!token) return next(new Error('No autenticado'));
 
     try {
         const decoded = jwt.verify( token, process.env.JWT_SECRET );
@@ -36,19 +39,21 @@ io.use(( socket, next ) => {
 io.on('connection',  (socket) => {
 
     // Unirse a sala especifica
-    socket.on('unirseChat', async ( chatId) => {
-        const miembro = await prisma.chatMiembro.findFirst({
-            where: {
-                chatId: Number(chatId),
-                usuarioId: socket.usuario.id
-            }
-        });
-
-        if ( !miembro ) return; 
-
-        socket.join(`chat_${chatId}`);
-        console.log(`Usuario ${socket.usuario.nombre} se unió al chat ${chatId}`);
+    socket.on('unirseChat', async (chatId) => {
+    const miembro = await prisma.chatMiembro.findFirst({
+        where: {
+            chatId: Number(chatId),
+            usuarioId: socket.usuario.id
+        }
     });
+
+    if (!miembro) return;
+
+    socket.join(`chat_${chatId}`);
+
+    const mensajes = await mensajeServicio.listarPorChat(Number(chatId));
+    socket.emit('cargarMensajesPrivado', mensajes);
+});
 
     // Enviar mensaje privado
     socket.on('enviarMensajePrivado', async ({ chatId, info }) => {
@@ -79,7 +84,7 @@ io.on('connection',  (socket) => {
     });
 
     // Actualiza el mensaje en la base de datos
-    socket.on('editarMensaje', async ({ mensajeId, nuevoContenido, chatId }) => {
+    socket.on('editarMensajePrivado', async ({ mensajeId, nuevoContenido, chatId }) => {
 
         const mensajeActualizado = await mensajeServicio.editarMensaje(
             mensajeId,
@@ -97,7 +102,7 @@ io.on('connection',  (socket) => {
     });
 
     // Archiva el mensaje en la base de datos
-    socket.on('borrarMensaje', async ( data ) => {
+    socket.on('borrarMensajePrivado', async ( data ) => {
         const { mensajeId } = data;
 
         await mensajeServicio.borrarMensaje(
