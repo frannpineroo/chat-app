@@ -35,6 +35,7 @@ app.use('/api/usuarios', usuarioRoutes);
 app.use('/auth', authRoutes);
 app.use('/api/chats', chatRoutes);
 app.use('/api/mensajes', mensajeRoutes);
+app.use('/api/chat', chatRouter);
 
 // RUTAS VISTAS
 app.get('/', redirigirSiAutenticado, (req, res) => {

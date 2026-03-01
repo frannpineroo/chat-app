@@ -47,7 +47,7 @@ async function buscarUsuarios(){
     const nombre = document.getElementById("buscarNombre").value;
 
     try {
-        const response = await fetch(`/usuarios/${encodeURIComponent(nombre)}`);
+        const response = await fetch(`/api/usuarios/${encodeURIComponent(nombre)}`);
         const usuarios = await response.json();
         
         mostrarResultadosBusqueda(usuarios);
@@ -150,7 +150,7 @@ async function buscarUsuariosGrupo(){
         return;
     }
     try {
-        const response = await fetch(`/usuarios/${encodeURIComponent(nombre)}`);
+        const response = await fetch(`api/usuarios/${encodeURIComponent(nombre)}`);
         const usuarios = await response.json();
         if(!Array.isArray(usuarios)){
             console.error("La respuesta no es un array:", usuarios);
@@ -226,7 +226,7 @@ async function createGroupChat(){  //REVISAR ESTE METODO CUANDO SE ADAPTE A LA P
 
     try {
 
-        const response = await fetch(`/chat/grupo`, {
+        const response = await fetch(`api/chat/grupo`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

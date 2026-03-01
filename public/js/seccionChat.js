@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function cargarChats() {
     try {
-        const response = await fetch(`/chat/usuarios/${usuarioId}/chats`);
+        const response = await fetch(`api/chat/usuarios/${usuarioId}/chats`);
         const resultado = await response.json();
 
             chats = Array.isArray(resultado) ? resultado : [];
@@ -37,11 +37,11 @@ function buscarChats(chat) {
 }
 
 function buscarChatsPrivados() {
-    return chats.filter(c => !c.isGroup );
+    return chats.filter(c => c.isPrivate);
 }
 
 function buscarChatsGrupales() {
-    return chats.filter(c => c.isGroup );
+    return chats.filter(c => !c.isPrivate);
 }
 
 //RENDERIZADO
@@ -112,7 +112,7 @@ async function buscarChats(e) {
     const filtro = document.getElementById("texto").value;
 
     try {
-        const response = await fetch(`/chat/usuarios/${usuarioId}/filtro/${filtro}`);
+        const response = await fetch(`api/chat/usuarios/${usuarioId}/filtro/${filtro}`);
         const resultado = await response.json();
 
             listaChats = resultado;

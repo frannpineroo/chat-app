@@ -10,8 +10,8 @@ class crearChatDTO {
         //}
 
         this.nombreChat = body.nombreChat.trim();
-        this.isGroup = body.isGroup ?? false;
-        this.isModerated = body.isModerated ?? false;
+        this.isPrivate = body.isPrivate;
+        this.isModerated = body.isModerated;
         this.usuariosIds = body.usuariosIds.map(id => Number(id));
     }
 }
