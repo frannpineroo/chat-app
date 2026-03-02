@@ -85,9 +85,10 @@ io.on('connection',  (socket) => {
 
     // Actualiza el mensaje en la base de datos
     socket.on('editarMensajePrivado', async ({ mensajeId, nuevoContenido, chatId }) => {
+        try {
 
-        const mensajeActualizado = await mensajeServicio.editarMensaje(
-            mensajeId,
+            const mensajeActualizado = await mensajeServicio.editarMensaje(
+            Number(mensajeId),
             nuevoContenido,
             socket.usuario.id
         );
@@ -99,6 +100,10 @@ io.on('connection',  (socket) => {
                 userId: mensajeActualizado.userId,
                 nombre: mensajeActualizado.usuario.nombre
         });
+        } catch (error) {
+            console.error('Error editando mensaje:', error.message);
+        }
+        
     });
 
     // Archiva el mensaje en la base de datos
@@ -106,7 +111,7 @@ io.on('connection',  (socket) => {
         const { mensajeId } = data;
 
         await mensajeServicio.borrarMensaje(
-            mensajeId,
+            Number(mensajeId),
             socket.usuario.id
         );
 

@@ -51,7 +51,11 @@ const editarMensaje = async ( mensajeId, nuevoInfo, userId ) => {
             info: nuevoInfo,
             editado: true
         },
-        include: { usuario: true }
+        include: { 
+            usuario: {
+                select: { nombre: true }
+            } 
+        }
     });
 };
 

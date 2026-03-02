@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="business">
 
 <head>
     <meta charset="UTF-8">
@@ -10,17 +10,61 @@
     <title>Registrar Usuario</title>
 </head>
 
-<body>
-    <h1>Chat</h1>
-    <p id="status">Registrar Usuario</p>
-    
-    <form action="" id="formUsuario">
-        <input type="text" id="nombre" placeholder="Nombre" required>
-        <input type="text" id="apellido" placeholder="Apellido" required>
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="contra" placeholder="Contra" required>
-        <button type="submit">Guardar</button>
-    </form>
+<body class="min-h-screen bg-base-200 flex items-center justify-center">
+
+    <div class="card w-96 bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h1 class="card-title text-2xl justify-center">Chat App</h1>
+            <p class="text-center text-sm text-gray-500" id="status">Registrar Usuario</p>
+
+            <form action="" id="formUsuario" class="space-y-4 mt-4">
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Nombre</span>
+                    </label>
+                    <input type="text" id="nombre" placeholder="Tu nombre"
+                        class="input input-bordered w-full" required>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Apellido</span>
+                    </label>
+                    <input type="text" id="apellido" placeholder="Tu apellido"
+                        class="input input-bordered w-full" required>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Email</span>
+                    </label>
+                    <input type="email" id="email" placeholder="correo@email.com"
+                        class="input input-bordered w-full" required>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Contraseña</span>
+                    </label>
+                    <input type="password" id="contra" placeholder="********"
+                        class="input input-bordered w-full" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-full">
+                    Registrarse
+                </button>
+            </form>
+            <div class="text-center mt-4">
+                <p class="text-sm">
+                    ¿Ya tienes una cuenta?
+                    <a href="/login" class="link link-primary font-semibold">
+                        Iniciar Sesión
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
 
     <script>
         const form = document.getElementById('formUsuario');
@@ -33,21 +77,32 @@
             const email = document.getElementById('email').value;
             const contra = document.getElementById('contra').value;
 
-            const respuesta = await fetch('/api/usuarios', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ nombre, apellido, email, contra })
-            });
+            try {
+                const respuesta = await fetch('/api/usuarios', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nombre, apellido, email, contra })
+                });
 
-            const data = await respuesta.json();
-            console.log(data);
-            alert('Usuario registrado con éxito');
+                const data = await respuesta.json();
+
+                if (!respuesta.ok) {
+                    throw new Error(data.message || 'Error al registrar usuario');
+                }
+
+                alert('Usuario registrado con éxito');
+                console.log(data);
+
+                // Opcional: redirigir al login después de registrarse
+                // window.location.href = "/login.html";
+
+            } catch (err) {
+                alert(err.message);
+            }
         });
     </script>
 
-
 </body>
-
 </html>

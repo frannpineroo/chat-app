@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="business">
 
 <head>
     <meta charset="UTF-8">
@@ -36,6 +36,14 @@
                     Iniciar Sesión
                 </button>
             </form>
+            <div class="text-center mt-4">
+                <p class="text-sm">
+                    ¿No tienes una cuenta?
+                    <a href="/" class="link link-primary font-semibold">
+                        Registrarse
+                    </a>
+                </p>
+            </div>
         </div>
     </div>
     <script>
@@ -64,6 +72,7 @@
 
                 alert('Inicio de sesión exitoso');
                 console.log(data);
+                window.location.href = "/usuarios";
             } catch ( err ) {
                 alert( err.message );
             }

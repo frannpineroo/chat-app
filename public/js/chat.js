@@ -51,12 +51,14 @@ function renderizarMensajes(mensajes) {
 function agregarMensajeAlDOM(msg) {
     const contenedor = document.getElementById('mensajes');
     const esMio = Number(msg.userId) === Number(miId);
+    const nombre = msg.nombre ?? msg.usuario?.nombre ?? '';
 
     let burbuja = document.getElementById(`mensaje-${msg.id}`);
+    let siguiente = null;
 
     const contenido = `
         <div class="chat-header text-xs opacity-70">
-            ${msg.nombre}
+            ${nombre}
         </div>
         <div class="chat-bubble ${esMio ? 'chat-bubble-primary' : ''}">
             ${msg.info}
@@ -76,17 +78,17 @@ function agregarMensajeAlDOM(msg) {
     `;
 
     if (burbuja) {
-        burbuja.innerHTML = contenido;
-        return;
+        siguiente = burbuja.nextSibling;
+        burbuja.remove();
     }
 
     burbuja = document.createElement('div');
     burbuja.id = `mensaje-${msg.id}`;
     burbuja.className = `chat ${esMio ? 'chat-end' : 'chat-start'}`;
     burbuja.innerHTML = contenido;
+    burbuja.dataset.enviadoEn = msg.enviadoEn ?? new Date().toISOString();
 
-    contenedor.appendChild(burbuja);
-    contenedor.scrollTop = contenedor.scrollHeight;
+    contenedor.insertBefore(burbuja, siguiente);
 }
 
 function enviarMensaje() {
@@ -100,7 +102,11 @@ function enviarMensaje() {
 function editarMensaje(mensajeId) {
     const nuevoInfo = prompt('Edita tu mensaje:');
     if (nuevoInfo && nuevoInfo.trim() !== '') {
-        socket.emit('editarMensajePrivado', { mensajeId, nuevoInfo, chatId });
+        socket.emit('editarMensajePrivado', {
+             mensajeId, 
+             nuevoContenido: nuevoInfo, 
+             chatId 
+            });
     }
 }
 
@@ -114,11 +120,19 @@ socket.on('nuevoMensajePrivado', (mensaje) => {
     agregarMensajeAlDOM(mensaje);
 });
 
-socket.on('mensajePrivadoEditado', (data) => {
-    agregarMensajeAlDOM(data.mensajeActualizado);
+socket.on('mensajeEditado', (data) => {
+    console.log('Datos recibidos en mensajeEditado:', data);
+    const elExistente = document.getElementById(`mensaje-${data.id}`);
+    console.log('Elemento encontrado en DOM:', elExistente);
+    const enviadoEn = elExistente?.dataset.enviadoEn ?? new Date().toISOString();
+    
+    agregarMensajeAlDOM({
+        ...data, 
+        enviadoEn
+    });
 });
 
-socket.on('mensajePrivadoBorrado', (data) => {
+socket.on('mensajeBorrado', (data) => {
     const el = document.getElementById(`mensaje-${data.mensajeId}`);
     if (el) el.remove();
 });
